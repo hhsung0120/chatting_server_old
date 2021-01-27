@@ -1,0 +1,55 @@
+.inputlabel {
+	padding:0 10px;
+}
+
+.admin_message {
+	color: #FF0000;
+}
+
+.direct_message {
+	color: #00FF00;
+}
+
+.blocked_message {
+	color: #0000FF;
+}
+
+.approve_message {
+	color: #0000FF;
+	margin: 0px;
+}
+
+.otheruser:hover{
+	cursor: pointer;
+}
+
+.chat-message {
+	border: none;
+}
+
+.enableblock {
+	background-color: #00FF00;
+	cursor: pointer;
+}
+
+.disableblock {
+	background-color: #0000FF;
+	cursor: pointer;
+}
+
+.mt15{
+	margin-top:15px;
+}
+
+.list_wrap{
+	height:83%;
+	border:1px solid #ccc;
+}
+
+.text_center{
+	text-align: center;
+}
+
+.display_none{
+	display: none;
+}

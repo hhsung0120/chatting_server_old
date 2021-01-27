@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html style="height:100%;">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <head>
+        <title>Chatting</title>
+
+		<link rel="stylesheet" href="/lib/bootstrap-3.3.6/css/bootstrap.css">
+       	<link rel="stylesheet" href="/css/style.css">
+
+		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<script src="/lib/bootstrap-3.3.6/js/bootstrap.js"></script>
+		<script src="/js/main.js"></script>
+		<script src="/js/eventType.js"></script>
+		<script src="/js/chatClient.js"></script>
+    </head>
+<body style="height:100%;" onbeforeunload="closeIt()">
+	<div class="col-lg-6">
+		<div>
+			<h3 class="col-lg-8" style="text-align:center;"> ChatRooms </h3>
+			<button type="button" class="btn btn-default col-lg-2 mt15" id="chatroom-refresh-btn">Refresh</button>
+			<button type="button" class="btn btn-default col-lg-2 mt15" data-toggle="modal" data-target="#create-chat-room-dialog">ChatRoomCreate</button>
+			<button type="button" class="btn btn-default col-lg-2 mt15" data-toggle="modal" data-target="#input-userinfo-dialog">UserInfo</button>
+			<span style="text-align:right"> </span>
+		</div>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Room</th>
+					<th>Owner</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody id="chat-room"></tbody>
+		</table>
+	</div>
+	<div id="chatting-room" class="col-lg-12 list_wrap display_none">
+		<div class="col-lg-4 list_wrap">
+			<ul class="list-group" id="user-list">
+			</ul>
+		</div>
+		<div class="col-lg-8 list_wrap">
+			<div class="col-lg-12">
+				<h3 id="room-name" class="col-lg-8 text_center"> Room </h3>
+				<button type="button" id="chatroom-admin-btn" class="btn btn-default col-lg-2 mt15" data-toggle="modal" data-target="#input-admin-message-dialog">Admin</button>
+				<button type="button" id="chatroom-update-btn" class="btn btn-default col-lg-2 mt15" onclick="updateChatRoom();">Update</button>
+				<button type="button" id="chatroom-exit-btn" class="btn btn-default col-lg-2 mt15" onclick="leaveChatRoom();">Exit</button>
+			</div>
+			<div class="col-lg-12" style="height:75%;overflow-y:auto">
+				<ul class="list-group" id="chat-messages">
+				</ul>
+			</div>
+			<div class="col-lg-12">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="..." id="chat-message">
+					<span class="input-group-btn"><button type="button" id="send-message-btn" class="btn btn-default" onclick="sendMessage();">Send</button></span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--  create chatting room dialog -->
+	<div class="modal fade" id="create-chat-room-dialog" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content" style="text-align:center;">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">Create Chatting Room</h4> <span class="modal-badge badge col-mt"></span>
+				</div>
+				<div class="modal-body">
+					<fieldset>
+						<table>
+							<tr style="padding: 3px;">
+								<td><label class="inputlabel">Name</label></td>
+								<td><input type="text" id="create-chatroom-name" class="form-control" value=""></td>
+							</tr>
+							<tr>
+								<td><label class="inputlabel">Description</label></td>
+								<td><input type="text" id="create-chatroom-description" class="form-control"></td>
+							</tr>
+							<tr>
+								<td><label class="typelabel">Type</label></td>
+								<td>
+									<label class="radio"><input type="radio" name="chatRoomType" class="chatRoomType" value="0" checked>n:m</label>
+									<label class="radio"><input type="radio" name="chatRoomType" class="chatRoomType" value="1">1:n</label>
+									<label class="radio"><input type="radio" name="chatRoomType" class="chatRoomType" value="2">Approve</label>
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="create-chatroom-btn"  class="btn btn-default" data-dismiss="modal">Create</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--  login dialog -->
+	<div class="modal fade" id="input-userinfo-dialog" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content" style="text-align:center;">
+				<div class="modal-header">
+					<h4 class="modal-title">User Information</h4> <span class="modal-badge badge col-mt"></span>
+				</div>
+				<div class="modal-body">
+					<fieldset>
+						<table>
+							<tr style="padding: 3px;">
+								<td><label class="inputlabel">UserId</label></td>
+								<td><input type="text" id="userInfo-userId" class="form-control" value=""></td>
+							</tr>
+							<tr>
+								<td><label class="inputlabel">Name</label></td>
+								<td><input type="text" id="userInfo-userName" class="form-control" value=""></td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
+				<div class="modal-footer">
+					<button id="signin-btn" type="button" class="btn btn-default" data-dismiss="modal">Sign In</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--  login dialog -->
+	<div class="modal fade" id="input-admin-message-dialog" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content text_center">
+				<div class="modal-header">
+					<h4 class="modal-title">Send Admin Message</h4> <span class="modal-badge badge col-mt"></span>
+				</div>
+				<div class="modal-body">
+					<fieldset>
+						<table>
+							<tr>
+								<td><label class="inputlabel">Message</label></td>
+								<td><input id="admin_message" type="text" class="form-control"></td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="send-admin-message-btn" class="btn btn-default" onclick="sendAdminMessage();">Send</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--  login dialog -->
+	<div class="modal fade" id="input-direct-message-dialog" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content text_center">
+				<div class="modal-header">
+					<h4 class="modal-title">Send Direct Message</h4> <span class="modal-badge badge col-mt"></span>
+				</div>
+				<div class="modal-body">
+					<fieldset>
+						<table>
+							<tr>
+								<td><label class="inputlabel">Message</label></td>
+								<td><input id="direct_message" type="text" class="form-control"></td>
+							</tr>
+						</table>
+						<div id="directmsg-user" class="display_none" data-useridx="" data-userchannel=""></div>
+					</fieldset>
+				</div>
+				<div class="modal-footer">
+					<button id="send-direct-message-btn" type="button" class="btn btn-default" onclick="sendDirectMessage();">Send</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!--       <script src="js/symposiumChat.js"></script> -->
+	<script>
+		$('#create-chatroom-btn').click(function(){
+			createChatRoom();
+		})
+		function closeIt(){
+			exitChatRoom(false);
+		}
+	</script>
+</body>
+</html>

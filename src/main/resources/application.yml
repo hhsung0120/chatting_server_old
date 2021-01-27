@@ -1,0 +1,72 @@
+server:
+  port: 8082
+
+spring:
+  profiles:
+    active: local
+
+  devtools:
+    livereload:
+      enabled: true
+
+  thymeleaf:
+    cache: false
+    enabled: true
+    encoding: UTF-8
+    suffix: .html
+  web:
+    resources:
+      static-locations: classpath:/static/
+
+#DB configuration
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations:
+    - mapper/*.xml
+  type-aliases-package: site.heeseong.chatting.model
+
+--- #local
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:log4jdbc:mysql://127.0.0.1:3306/chatting?characterEncoding=UTF-8&serverTimezone=Asia/Seoul&verifyServerCertificate=false&useSSL=false&allowPublicKeyRetrieval=true
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    username: root
+    password: root1234
+    hikari:
+      poolName: Hikari
+      maximum-pool-size: 10
+      max-lifetime: 1800000
+      auto-commit: false
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+
+logging:
+  level:
+    org.springframework.web: info
+    site.heeseong: info
+    jdbc.sqlonly : off
+    jdbc.sqltiming : off
+    jdbc.audit: off
+    jdbc.resultset: off
+    jdbc.resultsettable : off
+    jdbc.connection: off
+  file:
+    name: D:${file.separator}logs${file.separator}chatting${file.separator}chatting.log
+  logback:
+    rollingpolicy:
+      max-history: 1
+      max-file-size: 100MB
+
+default-upload-path: D:${file.separator}upload${file.separator}
+
+--- #dev
+
+--- #prod
