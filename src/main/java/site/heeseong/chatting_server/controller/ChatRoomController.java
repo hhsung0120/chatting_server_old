@@ -1,9 +1,12 @@
-package site.heeseong.chattingserver.controller;
+package site.heeseong.chatting_server.controller;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import site.heeseong.chattingserver.service.ChattingService;
+import site.heeseong.chatting_server.model.ChatRoom;
+import site.heeseong.chatting_server.model.EnterRoomResult;
+import site.heeseong.chatting_server.model.Users;
+import site.heeseong.chatting_server.service.ChattingService;
 
 @Log4j2
 @RestController
@@ -30,7 +33,9 @@ public class ChatRoomController {
 		chatRoom.setUserName(userName);
 		chatRoom.setAdmin(isAdmin);
 		Users users = new Users(chatRoom.getUserIdx(), chatRoom.getUserId(), chatRoom.getUserName(), chatRoom.isAdmin());
+		log.info("users {}", users.toString());
 
-		return chattingService.enterChatRoom(chatRoom, users);
+		//return chattingService.enterChatRoom(chatRoom, users);
+		return null;
 	}
 }

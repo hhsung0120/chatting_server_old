@@ -1,13 +1,13 @@
-package site.heeseong.chattingserver;
+package site.heeseong.chatting_server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ChattingserverApplication {
+public class ChattingServerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ChattingserverApplication.class, args);
+        SpringApplication.run(ChattingServerApplication.class, args);
     }
 
 }

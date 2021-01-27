@@ -7,7 +7,6 @@ var ChatClient = function() {
 		userName : ''
 	};
 
-	var userId = '';
 	var toUserId = '';
 	
 	var getUserInfo = function() {
@@ -40,7 +39,7 @@ var ChatClient = function() {
 
 			$.ajax({
 				method: "POST",
-				url: '/chatRoom/enterUser',
+				url: '/chattingRoom/enterUser',
 				contentType:'application/json; charset=UTF-8',
 				headers: userInfo,
 				data: JSON.stringify(sendData)

@@ -1,18 +1,12 @@
-package site.heeseong.chattingserver.service;
+package site.heeseong.chatting_server.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import site.heeseong.chatting.manager.ChattingManager;
-import site.heeseong.chatting.model.*;
-import site.heeseong.chatting.service.mapper.ChattingMapper;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ChattingService {
 
-	final private ChattingMapper chattingMapper;
+	/*final private ChattingMapper chattingMapper;
 	final private ChattingManager chatManager;
 
 	@Autowired
@@ -21,13 +15,13 @@ public class ChattingService {
 		this.chatManager = chatManager;
 	}
 
-	/**
+	*//**
 	 * 채팅방 유저 입장
 	 * @param chatRoom
 	 * @param users
 	 * @return EnterRoomResult
 	 * @throws Exception
-	 */
+	 *//*
 	public EnterRoomResult enterChatRoom(ChatRoom chatRoom, Users users) throws Exception {
 		EnterRoomResult enterRoomResult = chatManager.enterChatRoom(chatRoom, users, true);
 
@@ -146,5 +140,5 @@ public class ChattingService {
 			return chattingMapper.removeBlackUser(idx);
 		}
 		return -1;
-	}
+	}*/
 }

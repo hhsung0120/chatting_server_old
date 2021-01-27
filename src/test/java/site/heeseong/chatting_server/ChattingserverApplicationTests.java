@@ -1,4 +1,4 @@
-package site.heeseong.chattingserver;
+package site.heeseong.chatting_server;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

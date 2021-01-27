@@ -59,7 +59,7 @@ logging:
     jdbc.resultsettable : off
     jdbc.connection: off
   file:
-    name: D:${file.separator}logs${file.separator}chatting${file.separator}chatting.log
+    name: D:${file.separator}logs${file.separator}chatting_server${file.separator}chatting.log
   logback:
     rollingpolicy:
       max-history: 1
