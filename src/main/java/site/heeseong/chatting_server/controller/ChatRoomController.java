@@ -20,20 +20,18 @@ public class ChatRoomController {
 		this.chattingService = chattingService;
 	}
 
-	@RequestMapping(value="/enterUser", method=RequestMethod.POST)
+	@PostMapping(value="/enterUser")
 	public EnterRoomResult enterChatRoom(
 			@RequestHeader("userIdx") long userIdx,
 			@RequestHeader("userId") String userId,
 			@RequestHeader("userName") String userName,
-			@RequestHeader("isAdmin") boolean isAdmin,
 			@RequestBody ChatRoom chatRoom) throws Exception {
 
 		chatRoom.setUserIdx(userIdx);
 		chatRoom.setUserId(userId);
 		chatRoom.setUserName(userName);
-		chatRoom.setAdmin(isAdmin);
 		Users users = new Users(chatRoom.getUserIdx(), chatRoom.getUserId(), chatRoom.getUserName(), chatRoom.isAdmin());
-		log.info("users {}", users.toString());
+		System.out.println(users.toString());
 
 		//return chattingService.enterChatRoom(chatRoom, users);
 		return null;

@@ -7,38 +7,18 @@ var isAdmin = false;
 
 function createChatRoom(){
 
-	var userId = $('#userInfo-userId').val();
-	if(userId == ''){
-		alert('아이디가 없습니다 자동생성 합니다.');
-		userId = "userId"+Math.floor((Math.random() * 1000) + 1);
-	}
-
-	var userName = $('#userInfo-userName').val();
-	if(userName == ''){
-		alert('이름이 없습니다 자동생성 합니다.');
-		userName= Math.floor((Math.random() * 1000) + 1);
-	}
-
-	var userIdx = Math.floor((Math.random() * 1000) + 1);
-	if(userId == 'admin'){
-		userIdx = 1;
-	}
-
-	var chatRoomName = $('#create-chatroom-name').val();
-	if(chatRoomName == ""){
-		chatRoomName = "1";
-	}
+	var randomNumber = Math.floor((Math.random() * 1000) + 1);
+	var userId = $('#userInfo-userId').val() != '' ?  $('#userInfo-userId').val() : "userId" + randomNumber;
+	var userName = $('#userInfo-userName').val() != '' ? $('#userInfo-userName').val() : randomNumber;
+	var userIdx = userId == 'admin' ? 1 : Math.floor((Math.random() * 1000) + 1);
+	var chatRoomName = $('#create-chatroom-name').val() != '' ? $('#create-chatroom-name').val() : '1' ;
 
 	//0:MANYTOMANY, 1:ONETOMANY, 2:APPROVAL
-	//관리자 여부와 상관없이 무조건 제일 먼저 입장한 사람이 대빵임
-	//추후 처리 해야함
+	//관리자 여부와 상관없이 무조건 제일 먼저 입장한 사람이 대빵임 //추후 처리 해야함
 	var chatRoomType = $('input:radio[class="chatRoomType"]:checked').val();
-	var description = "Description";
+	var description = $('#create-chatroom-description').val() != '' ? $('#create-chatroom-description').val() : "Description";
 	var programIdx = chatRoomName;
-	var userIdx = Math.floor((Math.random() * 1000) + 1);
 	var adminIdx = userIdx;
-
-	userInfo.userMessageIdx = userIdx;
 
 	//관리자 일 경우 처리
 	if(userId == 'admin'){
@@ -47,6 +27,7 @@ function createChatRoom(){
 		isAdmin = false;
 	}
 
+	userInfo.userMessageIdx = userIdx;
 	ChatClient.setUserInfo(userIdx, userId, userName, isAdmin);
 	ChatClient.enterChatRoom(programIdx, adminIdx, chatRoomName, description, chatRoomType, function(data) {
 		ChatClient.getNewEvent(processEvents);

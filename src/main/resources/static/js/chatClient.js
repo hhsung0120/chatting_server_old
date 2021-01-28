@@ -4,7 +4,8 @@ var ChatClient = function() {
 		programIdx: -1,
 		userIdx : -1,
 		userId : '',
-		userName : ''
+		userName : '',
+		isAdmin : ''
 	};
 
 	var toUserId = '';
@@ -21,7 +22,7 @@ var ChatClient = function() {
 		userInfo.userIdx = userIdx;
 		userInfo.userId = userId;
 		userInfo.userName = userName;
-		userInfo.admin = isAdmin;
+		userInfo.isAdmin = isAdmin;
 	}
 	var setUserId = function(userId){
 		toUserId = userId;
@@ -138,7 +139,6 @@ var ChatClient = function() {
 	};
 	
 	var getNewEvent = function(callback) {
-		//alert("getNewEvent");
 		console.log('getNewEvent : start call');
 		if (userInfo.userIdx !== -1 && userInfo.programIdx !== -1) {
 			$.ajax({
@@ -148,7 +148,6 @@ var ChatClient = function() {
 				cache: false,
 				headers: userInfo
 			}).done(function(data){
-				//alert("getNewEvent doen");
 				if (callback) {
 					callback(data);
 				}
