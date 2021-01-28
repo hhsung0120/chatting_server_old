@@ -5,8 +5,15 @@ var ChatClient = function() {
 		userIdx : -1,
 		userId : '',
 		userName : '',
-		isAdmin : ''
+		isAdmin : false
 	};
+
+	var setUserInfo = function(userIdx, userId, userName, isAdmin) {
+		userInfo.userIdx = userIdx;
+		userInfo.userId = userId;
+		userInfo.userName = userName;
+		userInfo.isAdmin = isAdmin;
+	}
 
 	var toUserId = '';
 	
@@ -18,12 +25,7 @@ var ChatClient = function() {
 		return userInfo.userIdx;
 	};
 	
-	var setUserInfo = function(userIdx, userId, userName, isAdmin) {
-		userInfo.userIdx = userIdx;
-		userInfo.userId = userId;
-		userInfo.userName = userName;
-		userInfo.isAdmin = isAdmin;
-	}
+
 	var setUserId = function(userId){
 		toUserId = userId;
 	}
@@ -38,12 +40,13 @@ var ChatClient = function() {
 				type: type,
 			};
 
+			console.log(userInfo)
 			$.ajax({
-				method: "POST",
-				url: '/chattingRoom/enterUser',
-				contentType:'application/json; charset=UTF-8',
-				headers: userInfo,
-				data: JSON.stringify(sendData)
+				method : "POST",
+				url : '/chattingRoom/enterUser',
+				contentType : 'application/json; charset=UTF-8',
+				headers : userInfo,
+				data : JSON.stringify(sendData)
 			}).done(function(data){
 				userInfo.internalIdx = data.internalIdx;
 				userInfo.programIdx = data.programIdx;
@@ -114,8 +117,6 @@ var ChatClient = function() {
 			cache: false, //새로 추가 16.10.04  IE에서 기존 유저 새로고침 할 시 나감 처리 및 새로운 유저 입장 처리 해주기 위해 캐쉬 false;
 			headers: userInfo,
 		}).done(function(data){
-			//console.log("getUserList done");
-			//console.log(data);
 			if (callback) {
 				callback(data);
 			}

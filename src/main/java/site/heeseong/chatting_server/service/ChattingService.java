@@ -1,32 +1,33 @@
 package site.heeseong.chatting_server.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import site.heeseong.chatting_server.event_enum.EventType;
+import site.heeseong.chatting_server.manager.ChattingManager;
+import site.heeseong.chatting_server.mapper.ChattingMapper;
+import site.heeseong.chatting_server.model.ChattingRoom;
+import site.heeseong.chatting_server.model.EnterRoomResult;
+import site.heeseong.chatting_server.model.Event;
+import site.heeseong.chatting_server.model.Users;
 
 
 @Service
 public class ChattingService {
 
-	/*final private ChattingMapper chattingMapper;
-	final private ChattingManager chatManager;
+	final private ChattingMapper chattingMapper;
+	final private ChattingManager chattingManagerService;
 
 	@Autowired
-	private ChattingService(ChattingMapper chattingMapper, ChattingManager chatManager){
+	private ChattingService(ChattingMapper chattingMapper, ChattingManager chattingManagerService){
 		this.chattingMapper = chattingMapper;
-		this.chatManager = chatManager;
+		this.chattingManagerService = chattingManagerService;
 	}
 
-	*//**
-	 * 채팅방 유저 입장
-	 * @param chatRoom
-	 * @param users
-	 * @return EnterRoomResult
-	 * @throws Exception
-	 *//*
-	public EnterRoomResult enterChatRoom(ChatRoom chatRoom, Users users) throws Exception {
-		EnterRoomResult enterRoomResult = chatManager.enterChatRoom(chatRoom, users, true);
+	public EnterRoomResult enterChatRoom(ChattingRoom chattingRoom, Users users) throws Exception {
+		EnterRoomResult enterRoomResult = chattingManagerService.enterChatRoom(chattingRoom, users, true);
 
 		Event roomEvent = new Event(
-				EventType.ENTER_USER
+				EventType.ENTER_USER.getValue()
 				, enterRoomResult.getProgramIdx()
 				, users.getUserIdx()
 				, -1, users.getUserId()
@@ -37,7 +38,7 @@ public class ChattingService {
 		return enterRoomResult;
 	}
 
-	public ArrayList<ChatRoomData> listChatRooms(){
+	/*public ArrayList<ChatRoomData> listChatRooms(){
 		return chatManager.getChatRoomList();
 	}
 

@@ -1,9 +1,9 @@
 package site.heeseong.chatting_server.model;
 
-public class EnterRoomResult {
+public class EnterRoomResult extends ChattingRoomData {
 	private long internalIdx;
 	
-	/*public EnterRoomResult(long internalIdx, ChatRoomData org) {
+	public EnterRoomResult(long internalIdx, ChattingRoomData org) {
 		super();
 		this.internalIdx = internalIdx;
 		this.setProgramIdx(org.getProgramIdx());
@@ -13,7 +13,7 @@ public class EnterRoomResult {
 		this.setType(org.getType());
 		this.setAdminIdx(org.getAdminIdx());
 		this.setUserIdx(org.getUserIdx());
-	}*/
+	}
 	
 	public long getInternalIdx() {
 		return internalIdx;

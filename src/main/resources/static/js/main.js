@@ -19,13 +19,8 @@ function createChatRoom(){
 	var description = $('#create-chatroom-description').val() != '' ? $('#create-chatroom-description').val() : "Description";
 	var programIdx = chatRoomName;
 	var adminIdx = userIdx;
-
 	//관리자 일 경우 처리
-	if(userId == 'admin'){
-		isAdmin = true;
-	}else{
-		isAdmin = false;
-	}
+	isAdmin = userId == 'admin' ? true : false;
 
 	userInfo.userMessageIdx = userIdx;
 	ChatClient.setUserInfo(userIdx, userId, userName, isAdmin);
