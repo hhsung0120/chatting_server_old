@@ -52,7 +52,7 @@ public class ChattingManager {
 		if (notify) {
 			Event event = EventManager.makeEnterRoomEvent(chattingRoom.getProgramIdx(), userInfo);
 			//sendEvent(user.getInternalIdx(), event);
-			chattingMapper.addEvent(event);
+			chattingMapper.insertEvent(event);
 		}
 
 		//saveUsers();
@@ -232,7 +232,7 @@ public class ChattingManager {
 		if (log == true) {
 			Event event = EventManager.makeCreateRoomEvent(chatRoomData);
 	//		sendEvent(internalIdx, event);
-			chattingMapper.addEvent(event);
+			chattingMapper.insertEvent(event);
 		}
 		
 		return chatRoomManager;

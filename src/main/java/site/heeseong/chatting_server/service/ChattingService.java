@@ -34,7 +34,7 @@ public class ChattingService {
 				, users.getUserName()
 				, enterRoomResult.getName() + "_" + enterRoomResult.getDescription(), "");
 
-		chattingMapper.addEvent(roomEvent);
+		chattingMapper.insertEvent(roomEvent);
 		return enterRoomResult;
 	}
 
@@ -59,7 +59,7 @@ public class ChattingService {
 		chatManager.leaveChatRoom(internalIdx, programIdx, null);
 
 		Event roomEvent = new Event(EventType.LEAVE_USER, programIdx, userIdx, -1, "", "", "","");
-		chattingMapper.addEvent(roomEvent);
+		chattingMapper.insertEvent(roomEvent);
 	}
 	
 	public Integer[] getBlackList(long internalIdx, int roomIdx) throws Exception {
@@ -70,14 +70,14 @@ public class ChattingService {
 		chatManager.addBlackList(internalIdx, programIdx, blackUser);
 
 		Event roomEvent = new Event(EventType.ADD_BLACKLIST, programIdx, userIdx, blackUser, "", "", "","");
-		chattingMapper.addEvent(roomEvent);
+		chattingMapper.insertEvent(roomEvent);
 	}
 	
 	public void removeBlackList(long internalIdx, int userIdx, int programIdx, int blackUser) throws Exception {
 		chatManager.removeBlackList(internalIdx, programIdx, blackUser);
 
 		Event roomEvent = new Event(EventType.REMOVE_BLACKLIST, programIdx, userIdx, blackUser, "", "", "","");
-		chattingMapper.addEvent(roomEvent);
+		chattingMapper.insertEvent(roomEvent);
 	}
 	
 	public Event sendEvent(long internalIdx, Event chatDTO) throws Exception{
@@ -94,7 +94,7 @@ public class ChattingService {
 		e.setName(chatDTO.getName());
 		e.setMsg(enen);
 		
-		chattingMapper.addEvent(e);
+		chattingMapper.insertEvent(e);
 		chatDTO.setIdx(e.getIdx());
 		chatManager.sendEvent(internalIdx, chatDTO);
 		chattingMapper.insertMessageTypeUpdate(chatDTO);
