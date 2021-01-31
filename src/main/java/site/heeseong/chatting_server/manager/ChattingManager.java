@@ -9,20 +9,22 @@ import site.heeseong.chatting_server.mapper.ChattingMapper;
 import site.heeseong.chatting_server.mapper.ContextMapper;
 import site.heeseong.chatting_server.model.*;
 
-
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Log4j2
 @Component
 public class ChattingManager {
 
-	private HashMap<Integer, ChattingRoomManager> chatRooms = new HashMap<Integer, ChattingRoomManager>();
-	private HashMap<Long, ChattingUser> chatUsers = new HashMap<Long, ChattingUser>();
-	private Object roomLock = new Object();
-	private Object userLock = new Object();
+	//채팅방
+	private ConcurrentHashMap<Integer, ChattingRoomManager> chattingRooms = new ConcurrentHashMap<Integer, ChattingRoomManager>();
+	//채팅 유저
+	private ConcurrentHashMap<Long, ChattingUser> chattingUsers = new ConcurrentHashMap<Long, ChattingUser>();
+	//블락 채팅방
+	private Object chattingRoomLock = new Object();
+	//블락 유저
+	private Object chattingUserLock = new Object();
 	private long internalIndex = 0;
-
 	final private ChattingMapper chattingMapper;
 	final private ContextMapper contextMapper;
 
@@ -31,14 +33,17 @@ public class ChattingManager {
 		this.contextMapper = contextMapper;
 	}
 
-	public EnterRoomResult enterChatRoom(ChattingRoom chattingRoom, Users userInfo, boolean notify) throws Exception {
-		if (userInfo.getInternalIdx() != -1) {
+	public EnterRoomResult enterChatRoom(ChattingRoom chattingRoom, Users users, boolean notify) throws Exception {
+		if (users.getInternalIdx() != -1) {
 			throw new BadArgumentException();
 		}
 
-		ChattingUser user = createuser(userInfo);
+		//유저 정보 -> 채팅 유저 정보로 변환
+		ChattingUser user = createChattingUser(users);
 
-		ChattingRoomManager chatRoomManager = chatRooms.get(chattingRoom.getProgramIdx());
+		//채팅 방을 만들어주는 로직
+		//프로그램 idx 유니크 키
+		ChattingRoomManager chatRoomManager = chattingRooms.get(chattingRoom.getProgramIdx());
 		if (chatRoomManager == null) {
 			chatRoomManager = createChatRoom(user.getInternalIdx(), chattingRoom, true);
 		}
@@ -46,22 +51,20 @@ public class ChattingManager {
 		if (chatRoomManager.addUser(user.getUser()) == -1) {
 			throw new UserExistException();
 		}
-
 		user.setProgramIdx(chattingRoom.getProgramIdx());
 
 		if (notify) {
-			Event event = EventManager.makeEnterRoomEvent(chattingRoom.getProgramIdx(), userInfo);
-			//sendEvent(user.getInternalIdx(), event);
+			Event event = EventManager.makeEnterRoomEvent(chattingRoom.getProgramIdx(), users);
 			chattingMapper.insertEvent(event);
 		}
 
 		//saveUsers();
 		//saveRooms();
 
-		EnterRoomResult newResult = new EnterRoomResult(user.getInternalIdx(), chatRoomManager.getChatRoom());
+		EnterRoomResult newResult = new EnterRoomResult(user.getInternalIdx(), chatRoomManager.getChattingRoomData());
 
-		log.debug("enterchatroom user : " + chatUsers);
-		log.debug("enterchatroom room : " + chatRooms);
+		log.info("enter chatting user : " + chattingUsers);
+		log.info("enter chatting room : " + chattingRooms);
 
 
 		return newResult;
@@ -75,7 +78,7 @@ public class ChattingManager {
 		
 		ctx.setType("ROOM");
 		try {
-			String jsonInString = mapper.writeValueAsString(chatRooms);
+			String jsonInString = mapper.writeValueAsString(chattingRooms);
 			log.debug("JSON - room : " + jsonInString);
 			ctx.setContent(jsonInString);
 			contextMapper.setContext(ctx);
@@ -93,7 +96,7 @@ public class ChattingManager {
 		
 		ctx.setType("USER");
 		try {
-			String jsonInString = mapper.writeValueAsString(chatUsers);
+			String jsonInString = mapper.writeValueAsString(chattingUsers);
 			log.debug("JSON - user : " + jsonInString);
 			ctx.setContent(jsonInString);
 			contextMapper.setContext(ctx);
@@ -129,7 +132,7 @@ public class ChattingManager {
 							List<Integer> users = (List<Integer>)chatRoom.get("users");
 							if (users != null) {
 								for (Integer userIdx : users) {
-									for (Entry<Long, ChatUser> userEntry : chatUsers.entrySet()) {
+									for (Entry<Long, ChatUser> userEntry : chattingUsers.entrySet()) {
 										ChatUser user = userEntry.getValue();
 										if (user.getUserIdx() == userIdx) {
 											currentRoom.addUser(user.getUser());
@@ -175,7 +178,7 @@ public class ChattingManager {
 						Long userInternalIdx = tmpInternalIdx.longValue();
 						
 						Users userInfo = new Users(userInternalIdx, (int)chatUser.get("userIdx"), (String)chatUser.get("userId"), (String)chatUser.get("userName"), (boolean)chatUser.get("admin"));
-						createuser(userInfo);
+						createChattingUser(userInfo);
 						
 						if (internalIndex < userInternalIdx) {
 							internalIndex = userInternalIdx + 1;
@@ -193,12 +196,12 @@ public class ChattingManager {
 		loadUser();
 		loadRoom();
 		
-		log.debug("loaded user : " + chatUsers);
-		log.debug("loaded room : " + chatRooms);
+		log.debug("loaded user : " + chattingUsers);
+		log.debug("loaded room : " + chattingRooms);
 	}
 	
 	private void checkAdmin(long internalIdx) throws Exception {
-		ChatUser user = chatUsers.get(internalIdx);
+		ChatUser user = chattingUsers.get(internalIdx);
 		if (user == null || user.isAdmin() != true) {
 			throw new UnauthorizedException();
 		}
@@ -208,8 +211,8 @@ public class ChattingManager {
 	private ChattingRoomManager createChatRoom(long internalIdx, ChattingRoom chatRoomData, boolean log) throws Exception {
 		ChattingRoomManager chatRoomManager;
 		
-		synchronized (roomLock) {
-			if (chatRooms.get(chatRoomData.getProgramIdx()) != null) {
+		synchronized (chattingRoomLock) {
+			if (chattingRooms.get(chatRoomData.getProgramIdx()) != null) {
 				throw new ChatRoomExistException();
 			}
 			
@@ -225,8 +228,8 @@ public class ChattingManager {
 			
 			WeakReference<ChattingRoomManager> chatRoomRef = new WeakReference<ChattingRoomManager>(new ChattingRoomManager());
 			chatRoomManager = chatRoomRef.get();
-			chatRoomManager.setChatRoom(newRoomData);
-			chatRooms.put(chatRoomManager.getProgramIdx(), chatRoomManager);
+			chatRoomManager.setChattingRoomData(newRoomData);
+			chattingRooms.put(chatRoomManager.getProgramIdx(), chatRoomManager);
 		}
 
 		if (log == true) {
@@ -240,7 +243,7 @@ public class ChattingManager {
 	/*
 	
 	public ChatRoomData updateChatRoom(long internalIdx, site.heeseong.chatting.model.ChatRoom roomInfo) throws Exception {
-		ChatRoomManager chatRoomManager = chatRooms.get(roomInfo.getProgramIdx());
+		ChatRoomManager chatRoomManager = chattingRooms.get(roomInfo.getProgramIdx());
 		
 		checkAdmin(internalIdx);
 		
@@ -297,13 +300,13 @@ public class ChattingManager {
 	}
 		
 	private void removeChatRoom(long internalIdx, int roomIdx) throws Exception {
-		ChatRoomManager chatRoomManager = chatRooms.get(roomIdx);
+		ChatRoomManager chatRoomManager = chattingRooms.get(roomIdx);
 		if (chatRoomManager == null) {
 			throw new ChatRoomNotExistException();
 		}
 		
-		synchronized (roomLock) {
-			chatRooms.remove(roomIdx);
+		synchronized (chattingRoomLock) {
+			chattingRooms.remove(roomIdx);
 			chatRoomManager = null;
 		}
 		
@@ -315,7 +318,7 @@ public class ChattingManager {
 	public ArrayList<ChatRoomData> getChatRoomList() {
 		ArrayList<ChatRoomData> roomList = new ArrayList<ChatRoomData>();
 		
-		for (Entry<Integer, ChatRoomManager> roomEntry : chatRooms.entrySet()) {
+		for (Entry<Integer, ChatRoomManager> roomEntry : chattingRooms.entrySet()) {
 			ChatRoomManager room = roomEntry.getValue();
 			if (room != null) {
 				roomList.add(room.getChatRoom());
@@ -326,42 +329,43 @@ public class ChattingManager {
 	}
 	
 	public ChatRoomData getChatRoom(int roomIdx) {
-		ChatRoomManager room = chatRooms.get(roomIdx);
+		ChatRoomManager room = chattingRooms.get(roomIdx);
 		if (room != null) {
 			return room.getChatRoom();
 		}
 		return null;
 	}
 	*/
-	public ChattingUser createuser(Users userInfo) {
+	public ChattingUser createChattingUser(Users userInfo) {
 		internalIndex++;
-		
+
 		userInfo.setInternalIdx(internalIndex);
-		
+
+		//자주 사용 되는 객체 이기 때문에 약한 참조 처리
 		WeakReference<ChattingUser> userRef = new WeakReference<ChattingUser>(new ChattingUser(userInfo));
 		ChattingUser user = userRef.get();
 
-		synchronized (userLock) {
-			chatUsers.put(internalIndex, user);
+		synchronized (chattingUserLock) {
+			chattingUsers.put(internalIndex, user);
 		}
 		return user;
 	}
 
 	/*
 	public int removeUser(long internalIdx, Iterator<Entry<Long, ChatUser>> userIteration) throws Exception {
-		ChatUser user = chatUsers.get(internalIdx);
+		ChatUser user = chattingUsers.get(internalIdx);
 		if (user == null) {
 			return -1;
 		}
 		
 		user.removeAll();
 		
-		synchronized (userLock) {
+		synchronized (chattingUserLock) {
 			if (userIteration != null) {
 				userIteration.remove();
 			}
 			else {
-				chatUsers.remove(internalIdx);
+				chattingUsers.remove(internalIdx);
 			}
 			user = null;
 		}
@@ -372,14 +376,14 @@ public class ChattingManager {
 	
 	public int leaveChatRoom(long internalIdx, int roomIdx, Iterator<Entry<Long, ChatUser>> userIteration) throws Exception {
 		if (roomIdx != -1) {
-			ChatRoomManager chatRoomManager = chatRooms.get(roomIdx);
+			ChatRoomManager chatRoomManager = chattingRooms.get(roomIdx);
 			if (chatRoomManager == null) {
 				throw new ChatRoomNotExistException();
 			}
 	
 			chatRoomManager.removeUser(internalIdx);
 			
-			ChatUser user = chatUsers.get(internalIdx);
+			ChatUser user = chattingUsers.get(internalIdx);
 			if (user != null) {
 				removeUser(internalIdx, userIteration);
 			}
@@ -400,14 +404,14 @@ public class ChattingManager {
 			throw new BadArgumentException();
 		}
 		
-		log.debug("leaveChatRoom user : " + chatUsers);
-		log.debug("leaveChatRoom room : " + chatRooms);
+		log.debug("leaveChatRoom user : " + chattingUsers);
+		log.debug("leaveChatRoom room : " + chattingRooms);
 
 		return 0;
 	}
 	
 	public Integer[] getBlackList(long internalIdx, int roomIdx) throws Exception {
-		ChatRoomManager chatRoomManager = chatRooms.get(roomIdx);
+		ChatRoomManager chatRoomManager = chattingRooms.get(roomIdx);
 		if (chatRoomManager == null) {
 			return null;
 		}
@@ -419,7 +423,7 @@ public class ChattingManager {
 	
 	public void addBlackList(long internalIdx, int programIdx, int blackUser) throws Exception {
 		if (programIdx != -1) {
-			ChatRoomManager chatRoomManager = chatRooms.get(programIdx);
+			ChatRoomManager chatRoomManager = chattingRooms.get(programIdx);
 			if (chatRoomManager == null) {
 				throw new ChatRoomNotExistException();
 			}
@@ -436,7 +440,7 @@ public class ChattingManager {
 	
 	public void removeBlackList(long internalIdx, int programIdx, int blackUser) throws Exception {
 		if (programIdx != -1) {
-			ChatRoomManager chatRoomManager = chatRooms.get(programIdx);
+			ChatRoomManager chatRoomManager = chattingRooms.get(programIdx);
 			if (chatRoomManager == null) {
 				throw new ChatRoomNotExistException();
 			}
@@ -451,7 +455,7 @@ public class ChattingManager {
 	public ArrayList<Users> getUserList(int roomIdx) {
 		ArrayList<Users> userList = new ArrayList<Users>();
 		
-		ChatRoomManager chatRoomManager = chatRooms.get(roomIdx);
+		ChatRoomManager chatRoomManager = chattingRooms.get(roomIdx);
 		if (chatRoomManager == null) {
 			return null;
 		}
@@ -463,7 +467,7 @@ public class ChattingManager {
 	}
 	
 	public ArrayList<Event> getNewEvents(long internalIdx) throws Exception {
-		ChatUser user = chatUsers.get(internalIdx);
+		ChatUser user = chattingUsers.get(internalIdx);
 		if (user == null) {
 			log.debug("getNewEvents : NO User : " + internalIdx);
 			throw new UserNotExistException();
@@ -473,7 +477,7 @@ public class ChattingManager {
 	}
 	
 	private void sendEventToAll(long internalIdx, Event event, boolean sendMyself) {
-		for (Entry<Long, ChatUser> userEntry : chatUsers.entrySet()) {
+		for (Entry<Long, ChatUser> userEntry : chattingUsers.entrySet()) {
 			ChatUser user = userEntry.getValue();
 			if (sendMyself == true || (sendMyself == false && user.getInternalIdx() != internalIdx)) {
 				if (user != null) {
@@ -488,11 +492,11 @@ public class ChattingManager {
 	}
 
 	private void sendEventToRoom(long internalIdx, Event event, boolean sendMyself) {
-		ChatRoomManager room = chatRooms.get(event.getProgramIdx());
+		ChatRoomManager room = chattingRooms.get(event.getProgramIdx());
 		if (room != null) {
 			for (Long keyIndex : room.getInternalUsers()) {
 				if (sendMyself == true || (sendMyself == false && internalIdx != keyIndex)) {
-					ChatUser user = chatUsers.get(keyIndex);
+					ChatUser user = chattingUsers.get(keyIndex);
 					if (user != null) {
 						user.postMessage(event);
 					}
@@ -506,7 +510,7 @@ public class ChattingManager {
 	}
 
 	private void sendEventToPerson(long internalIdx, Event event) {
-		ChatUser user = chatUsers.get(internalIdx);
+		ChatUser user = chattingUsers.get(internalIdx);
 		if (user != null) {
 			try {
 				user.postMessage(event);
@@ -525,10 +529,10 @@ public class ChattingManager {
 	}
 	
 	private void sendEventToPerson(int roomIdx, int userIdx, Event event) {
-		ChatRoomManager room = chatRooms.get(roomIdx);
+		ChatRoomManager room = chattingRooms.get(roomIdx);
 		if (room != null) {
 			for (Long keyIndex : room.getInternalUsers()) {
-				ChatUser user = chatUsers.get(keyIndex);
+				ChatUser user = chattingUsers.get(keyIndex);
 				if (userIdx == user.getUserIdx()) {
 					sendEventToPerson(keyIndex, event);
 				}
@@ -538,7 +542,7 @@ public class ChattingManager {
 	
 	public void sendMessage(long internalIdx, Event event) throws Exception{
 		// depends on room type
-		ChatRoomManager room = chatRooms.get(event.getProgramIdx());
+		ChatRoomManager room = chattingRooms.get(event.getProgramIdx());
 		if (room != null) { 
 			ChatUser user;
 			
@@ -553,7 +557,7 @@ public class ChattingManager {
 				sendEventToRoom(internalIdx, event);
 				break;
 			case RoomType.ONE_TO_MANY :
-				user = chatUsers.get(internalIdx);
+				user = chattingUsers.get(internalIdx);
 				if (user != null && user.isAdmin() == true) {
 					// admin user : send to all user
 					sendEventToRoom(internalIdx, event);
@@ -565,7 +569,7 @@ public class ChattingManager {
 				}
 				break;
 			case RoomType.APPROVAL :
-				user = chatUsers.get(internalIdx);
+				user = chattingUsers.get(internalIdx);
 				if (user != null && user.isAdmin() == true) {
 					// admin user : without approval
 					sendEventToRoom(internalIdx, event);
@@ -628,7 +632,7 @@ public class ChattingManager {
 
 	/*
 	public void checkUsersTimeout() {
-		Iterator<Entry<Long, ChatUser>> iter = chatUsers.entrySet().iterator();
+		Iterator<Entry<Long, ChatUser>> iter = `chattingUsers`.entrySet().iterator();
 		while (iter.hasNext()) {
 			Entry<Long, ChatUser> userEntry = iter.next();
 			ChatUser user = userEntry.getValue();

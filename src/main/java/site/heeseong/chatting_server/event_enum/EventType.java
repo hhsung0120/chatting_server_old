@@ -1,7 +1,5 @@
 package site.heeseong.chatting_server.event_enum;
 
-import lombok.val;
-
 public enum EventType {
 
     NORMAL_MSG(0, "NORMAL_MSG")

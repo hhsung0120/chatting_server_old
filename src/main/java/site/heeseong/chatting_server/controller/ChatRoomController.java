@@ -34,6 +34,9 @@ public class ChatRoomController {
 		chatRoom.setUserId(userId);
 		chatRoom.setUserName(userName);
 		chatRoom.setAdmin(isAdmin);
+		
+		//유저 데이터 셋팅
+		//이부분은 전부가 세션으로 처리 가능
 		Users users = new Users(chatRoom.getUserIdx(), chatRoom.getUserId(), chatRoom.getUserName(), chatRoom.isAdmin());
 
 		return chattingService.enterChatRoom(chatRoom, users);

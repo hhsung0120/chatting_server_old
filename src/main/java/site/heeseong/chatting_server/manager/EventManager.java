@@ -15,7 +15,7 @@ public class EventManager {
 		event.setFrom_userIdx(chattingRoom.getUserIdx());
 		event.setTo_userIdx(chattingRoom.getAdminIdx());
 		event.setName(chattingRoom.getName());
-		event.setMsg(chattingRoom.getDescription());
+		event.setMessage(chattingRoom.getDescription());
 		
 		return event;
 	}
@@ -28,7 +28,7 @@ public class EventManager {
 		event.setFrom_userIdx(chattingRoom.getUserIdx());
 		event.setTo_userIdx(chattingRoom.getAdminIdx());
 		event.setName(chattingRoom.getName());
-		event.setMsg(chattingRoom.getDescription());
+		event.setMessage(chattingRoom.getDescription());
 		
 		return event;
 	}
@@ -71,16 +71,15 @@ public class EventManager {
 		newEvent.setFrom_userIdx(event.getFrom_userIdx());
 		newEvent.setType(event.getType());
 		if (event.getUserId() != null) {
-			newEvent.setUserId(new String(event.getUserId()));
+			newEvent.setUserId(event.getUserId());
 		}
 		if (event.getName() != null) {
-			newEvent.setName(new String(event.getName()));
+			newEvent.setName(event.getName());
 		}
 		newEvent.setTo_userIdx(event.getTo_userIdx());
-		if (event.getMsg() != null) {
-			newEvent.setMsg(new String(event.getMsg()));
+		if (event.getMessage() != null) {
+			newEvent.setMessage(event.getMessage());
 		}
-		
 		return newEvent;
 	}
 }

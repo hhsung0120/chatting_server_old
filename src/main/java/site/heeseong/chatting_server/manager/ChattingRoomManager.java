@@ -1,96 +1,91 @@
 package site.heeseong.chatting_server.manager;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import site.heeseong.chatting_server.model.ChattingRoomData;
 import site.heeseong.chatting_server.model.Users;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
+@Data
 public class ChattingRoomManager {
-	private ChattingRoomData chatRoom;
-	private HashMap<Long, Users> users;
+
+	private ChattingRoomData chattingRoomData;
+	private ConcurrentHashMap<Long, Users> users;
 	private Object userLock = new Object();
 	private HashSet<Integer> blackList = new HashSet<Integer>();
 	private Object blackLock = new Object();
-	
-	public void setChatRoom(ChattingRoomData chatRoom) {
-		this.chatRoom = chatRoom;
-	}
-	
-	public ChattingRoomData getChatRoom() {
-		return chatRoom;
-	}
-	
+
 	@JsonIgnore
 	public String getName() {
-		if (chatRoom != null) {
-			return chatRoom.getName();
+		if (chattingRoomData != null) {
+			return chattingRoomData.getName();
 		}
 		return null;
 	}
 	
 	@JsonIgnore
 	public String getPassword() {
-		if (chatRoom != null) {
-			return chatRoom.getPassword();
+		if (chattingRoomData != null) {
+			return chattingRoomData.getPassword();
 		}
 		return null;
 	}
 	
 	@JsonIgnore
 	public String getDescription() {
-		if (chatRoom != null) {
-			return chatRoom.getDescription();
+		if (chattingRoomData != null) {
+			return chattingRoomData.getDescription();
 		}
 		return null;
 	}
 	
 	@JsonIgnore
 	public int getProgramIdx() {
-		if (chatRoom != null) {
-			return chatRoom.getProgramIdx();
+		if (chattingRoomData != null) {
+			return chattingRoomData.getProgramIdx();
 		}
 		return -1;
 	}
 
 	@JsonIgnore
 	public long getUserIdx() {
-		if (chatRoom != null) {
-			return chatRoom.getUserIdx();
+		if (chattingRoomData != null) {
+			return chattingRoomData.getUserIdx();
 		}
 		return -1;
 	}
 	
 	@JsonIgnore
 	public String getStatus() {
-		if (chatRoom != null) {
-			return chatRoom.getStatus();
+		if (chattingRoomData != null) {
+			return chattingRoomData.getStatus();
 		}
 		return null;
 	}
 	
 	@JsonIgnore
 	public int getType() {
-		if (chatRoom != null) {
-			return chatRoom.getType();
+		if (chattingRoomData != null) {
+			return chattingRoomData.getType();
 		}
 		return 0;
 	}
 	
 	@JsonIgnore
 	public long getAdminIdx() {
-		if (chatRoom != null) {
-			return chatRoom.getAdminIdx();
+		if (chattingRoomData != null) {
+			return chattingRoomData.getAdminIdx();
 		}
 		return 0;
 	}
 	
 	@JsonIgnore
-	public HashMap<Long, Users> getUserList() {
+	public ConcurrentHashMap<Long, Users> getUserList() {
 		if (users == null) {
-			users = new HashMap<Long, Users>();
+			users = new ConcurrentHashMap<Long, Users>();
 		}
 		return users;
 	}
@@ -108,7 +103,7 @@ public class ChattingRoomManager {
 	@JsonIgnore
 	public Set<Long> getInternalUsers() {
 		if (users == null) {
-			users = new HashMap<Long, Users>();
+			users = new ConcurrentHashMap<Long, Users>();
 		}
 		return users.keySet();
 	}
@@ -158,10 +153,5 @@ public class ChattingRoomManager {
 		synchronized(blackLock) {
 			blackList.remove(userIdx);
 		}
-	}
-
-	@Override
-	public String toString() {
-		return "ChatRoom [chatRoom=" + chatRoom + ", users=" + users + ", blackList=" + blackList + "]";
 	}
 }

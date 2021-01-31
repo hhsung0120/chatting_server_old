@@ -17,22 +17,11 @@ public class ChattingUser {
 	private long latestMessageTime;
 	private long DEFAULT_MESSAGE_TIMEOUT = 60 * 1000 * 2;	 // 2 minutes
 	private long userTimeout = DEFAULT_MESSAGE_TIMEOUT;
-	
-	public ChattingUser() {
-	}
 
 	public ChattingUser(Users userInfo) {
 		user = userInfo;
 		messageQueue = new ArrayBlockingQueue<Event>(10);
 		latestMessageTime = System.currentTimeMillis();
-	}
-
-	@JsonIgnore
-	public Users getUser() {
-		return user;
-	}
-	public void setUser(Users user) {
-		this.user = user;
 	}
 
 	public long getUserIdx() {
@@ -49,6 +38,10 @@ public class ChattingUser {
 
 	public String getUserName() {
 		return user.getUserName();
+	}
+
+	public boolean isAdmin() {
+		return user.isAdmin();
 	}
 
 	public void postMessage(Event event) {
@@ -113,8 +106,6 @@ public class ChattingUser {
 		}
 	}
 
-	public boolean isAdmin() {
-		return user.isAdmin();
-	}
+
 
 }
