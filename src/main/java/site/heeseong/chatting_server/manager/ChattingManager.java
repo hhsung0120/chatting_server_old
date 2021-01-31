@@ -25,9 +25,9 @@ public class ChattingManager {
 	//블락 유저
 	private Object chattingUserLock = new Object();
 	private long internalIndex = 0;
+
 	final private ChattingMapper chattingMapper;
 	final private ContextMapper contextMapper;
-
 	public ChattingManager(ChattingMapper chattingMapper, ContextMapper contextMapper){
 		this.chattingMapper = chattingMapper;
 		this.contextMapper = contextMapper;
