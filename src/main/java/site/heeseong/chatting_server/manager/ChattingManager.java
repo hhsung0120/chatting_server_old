@@ -43,12 +43,12 @@ public class ChattingManager {
 
 		//채팅 방을 만들어주는 로직
 		//프로그램 idx 유니크 키
-		ChattingRoomManager chatRoomManager = chattingRooms.get(chattingRoom.getProgramIdx());
-		if (chatRoomManager == null) {
-			chatRoomManager = createChatRoom(user.getInternalIdx(), chattingRoom, true);
+		ChattingRoomManager chattingRoomManager = chattingRooms.get(chattingRoom.getProgramIdx());
+		if (chattingRoomManager == null) {
+			chattingRoomManager = createChattingRoom(user.getInternalIdx(), chattingRoom, true);
 		}
 
-		if (chatRoomManager.addUser(user.getUser()) == -1) {
+		if (chattingRoomManager.addUser(user.getUser()) == -1) {
 			throw new UserExistException();
 		}
 		user.setProgramIdx(chattingRoom.getProgramIdx());
@@ -61,7 +61,7 @@ public class ChattingManager {
 		//saveUsers();
 		//saveRooms();
 
-		EnterRoomResult newResult = new EnterRoomResult(user.getInternalIdx(), chatRoomManager.getChattingRoomData());
+		EnterRoomResult newResult = new EnterRoomResult(user.getInternalIdx(), chattingRoomManager.getChattingRoomData());
 
 		log.info("enter chatting user : " + chattingUsers);
 		log.info("enter chatting room : " + chattingRooms);
@@ -70,6 +70,38 @@ public class ChattingManager {
 		return newResult;
 	}
 
+	private ChattingRoomManager createChattingRoom(long internalIdx, ChattingRoom chatRoomData, boolean log) throws Exception {
+		ChattingRoomManager chatRoomManager;
+
+		synchronized (chattingRoomLock) {
+			if (chattingRooms.get(chatRoomData.getProgramIdx()) != null) {
+				throw new ChatRoomExistException();
+			}
+
+			ChattingRoomData newRoomData = new ChattingRoomData();
+			newRoomData.setProgramIdx(chatRoomData.getProgramIdx());
+			newRoomData.setName(chatRoomData.getName());
+			newRoomData.setPassword(chatRoomData.getPassword());
+			newRoomData.setDescription(chatRoomData.getDescription());
+			newRoomData.setStatus(chatRoomData.getStatus());
+			newRoomData.setType(chatRoomData.getType());
+			newRoomData.setAdminIdx(chatRoomData.getAdminIdx());
+			newRoomData.setUserIdx(chatRoomData.getUserIdx());
+
+			WeakReference<ChattingRoomManager> chatRoomRef = new WeakReference<ChattingRoomManager>(new ChattingRoomManager());
+			chatRoomManager = chatRoomRef.get();
+			chatRoomManager.setChattingRoomData(newRoomData);
+			chattingRooms.put(chatRoomManager.getProgramIdx(), chatRoomManager);
+		}
+
+		if (log == true) {
+			Event event = EventManager.makeCreateRoomEvent(chatRoomData);
+			//		sendEvent(internalIdx, event);
+			chattingMapper.insertEvent(event);
+		}
+
+		return chatRoomManager;
+	}
 	/*public void saveRooms() {
 		ContextDTO ctx = new ContextDTO();
 		
@@ -126,7 +158,7 @@ public class ChattingManager {
 						if (room != null) {
 							site.heeseong.chatting.model.ChatRoom newChatRoom = new site.heeseong.chatting.model.ChatRoom((int)room.get("programIdx"), (String)room.get("name"), (String)room.get("password"),
 									(String)room.get("description"), (String)room.get("status"), (int)room.get("type"), (int)room.get("adminIdx"), (int)room.get("userIdx"));
-							ChatRoomManager currentRoom = createChatRoom(-1, newChatRoom, false);
+							ChatRoomManager currentRoom = createChattingRoom(-1, newChatRoom, false);
 							
 							@SuppressWarnings("unchecked")
 							List<Integer> users = (List<Integer>)chatRoom.get("users");
@@ -208,38 +240,7 @@ public class ChattingManager {
 	}
 
 	*/
-	private ChattingRoomManager createChatRoom(long internalIdx, ChattingRoom chatRoomData, boolean log) throws Exception {
-		ChattingRoomManager chatRoomManager;
-		
-		synchronized (chattingRoomLock) {
-			if (chattingRooms.get(chatRoomData.getProgramIdx()) != null) {
-				throw new ChatRoomExistException();
-			}
-			
-			ChattingRoomData newRoomData = new ChattingRoomData();
-			newRoomData.setProgramIdx(chatRoomData.getProgramIdx());
-			newRoomData.setName(chatRoomData.getName());
-			newRoomData.setPassword(chatRoomData.getPassword());
-			newRoomData.setDescription(chatRoomData.getDescription());
-			newRoomData.setStatus(chatRoomData.getStatus());
-			newRoomData.setType(chatRoomData.getType());
-			newRoomData.setAdminIdx(chatRoomData.getAdminIdx());
-			newRoomData.setUserIdx(chatRoomData.getUserIdx());
-			
-			WeakReference<ChattingRoomManager> chatRoomRef = new WeakReference<ChattingRoomManager>(new ChattingRoomManager());
-			chatRoomManager = chatRoomRef.get();
-			chatRoomManager.setChattingRoomData(newRoomData);
-			chattingRooms.put(chatRoomManager.getProgramIdx(), chatRoomManager);
-		}
 
-		if (log == true) {
-			Event event = EventManager.makeCreateRoomEvent(chatRoomData);
-	//		sendEvent(internalIdx, event);
-			chattingMapper.insertEvent(event);
-		}
-		
-		return chatRoomManager;
-	}
 	/*
 	
 	public ChatRoomData updateChatRoom(long internalIdx, site.heeseong.chatting.model.ChatRoom roomInfo) throws Exception {
