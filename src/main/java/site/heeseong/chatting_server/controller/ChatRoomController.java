@@ -29,7 +29,6 @@ public class ChatRoomController {
 			@RequestHeader("isAdmin") boolean isAdmin,
 			@RequestBody ChattingRoom chatRoom) throws Exception {
 
-
 		chatRoom.setUserIdx(userIdx);
 		chatRoom.setUserId(userId);
 		chatRoom.setUserName(userName);

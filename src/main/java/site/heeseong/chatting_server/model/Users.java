@@ -4,7 +4,8 @@ import lombok.Data;
 
 @Data
 public class Users {
-	long internalIdx;
+
+	private long internalIdx;
 	private long userIdx;
 	private String userId;
 	private String userName;
