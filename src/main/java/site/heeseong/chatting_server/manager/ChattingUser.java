@@ -11,7 +11,8 @@ import java.util.concurrent.TimeUnit;
 
 @Data
 public class ChattingUser {
-	private Users user;
+
+	private Users users;
 	private int programIdx;
 	private ArrayBlockingQueue<Event> messageQueue;
 	private long latestMessageTime;
@@ -19,29 +20,37 @@ public class ChattingUser {
 	private long userTimeout = DEFAULT_MESSAGE_TIMEOUT;
 
 	public ChattingUser(Users userInfo) {
-		user = userInfo;
+		users = userInfo;
 		messageQueue = new ArrayBlockingQueue<Event>(10);
 		latestMessageTime = System.currentTimeMillis();
 	}
 
+	public Users getUser() {
+		return users;
+	}
+
+	public void setUser(Users user) {
+		this.users = user;
+	}
+
 	public long getUserIdx() {
-		return user.getUserIdx();
+		return users.getUserIdx();
 	}
 
 	public long getInternalIdx() {
-		return user.getInternalIdx();
+		return users.getInternalIdx();
 	}
 
 	public String getUserId() {
-		return user.getUserId();
+		return users.getUserId();
 	}
 
 	public String getUserName() {
-		return user.getUserName();
+		return users.getUserName();
 	}
 
 	public boolean isAdmin() {
-		return user.isAdmin();
+		return users.isAdmin();
 	}
 
 	public void postMessage(Event event) {

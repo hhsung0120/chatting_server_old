@@ -27,17 +27,17 @@ public class ChatRoomController {
 			@RequestHeader("userId") String userId,
 			@RequestHeader("userName") String userName,
 			@RequestHeader("isAdmin") boolean isAdmin,
-			@RequestBody ChattingRoom chatRoom) throws Exception {
+			@RequestBody ChattingRoom chattingRoom) throws Exception {
 
-		chatRoom.setUserIdx(userIdx);
-		chatRoom.setUserId(userId);
-		chatRoom.setUserName(userName);
-		chatRoom.setAdmin(isAdmin);
+		chattingRoom.setUserIdx(userIdx);
+		chattingRoom.setUserId(userId);
+		chattingRoom.setUserName(userName);
+		chattingRoom.setAdmin(isAdmin);
 		
 		//유저 데이터 셋팅
 		//이부분은 전부가 세션으로 처리 가능
-		Users users = new Users(chatRoom.getUserIdx(), chatRoom.getUserId(), chatRoom.getUserName(), chatRoom.isAdmin());
+		Users users = new Users(chattingRoom.getUserIdx(), chattingRoom.getUserId(), chattingRoom.getUserName(), chattingRoom.isAdmin());
 
-		return chattingService.enterChatRoom(chatRoom, users);
+		return chattingService.enterChatRoom(chattingRoom, users);
 	}
 }
