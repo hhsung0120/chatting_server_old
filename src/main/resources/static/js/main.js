@@ -223,24 +223,6 @@ var processEvents = function(events) {
 							+'<span class="bg_top"></span><p class="txt">'+event.msg+'</p><span class="bg_bottom"></span>'+
 							'</div></li>');
 					}
-
-					//모바일
-					if(event.fromUserIdx==userInfo.userMessageIdx && event.name == 'admin'){
-						$('#mo-chat-messages').append('<li class="admin"><div class="clear"><p class="name fl">'+event.name+'</p>'+
-							'<div class="fr">'+
-							'</div></div><div class="cont"><span class="bg_top"></span><p class="txt">'+event.msg+'</p>'+
-							'<span class="bg_bottom"></span></div></li>');
-					}else if(event.fromUserIdx!=userInfo.userMessageIdx && event.name == 'admin'){
-						$('#mo-chat-messages').append('<li class="admin"><div class="clear"><p class="name fl">'+event.name+'</p>'+
-							'<div class="fr"></div></div><div class="cont"><span class="bg_top"></span><p class="txt">'+event.msg+'</p>'+
-							'<span class="bg_bottom"></span></div></li>');
-					}
-					else{
-						$("#mo-chat-messages").append('<li class="me"><p class="name">'+event.name+'</p><div class="cont">'
-							+'<span class="bg_top"></span><p class="txt">'+event.msg+'</p><span class="bg_bottom"></span>'+
-							'</div></li>');
-					}
-
 					break;
 				case eventType.APPROVED_MSG:
 					$('#chat-messages').append('<li class="list-group-item chat-message col-lg-12">msg Approved</li>');

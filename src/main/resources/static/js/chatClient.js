@@ -112,7 +112,7 @@ var ChatClient = function() {
 	var getUserList = function(callback) {
 		$.ajax({
 			method: "GET",
-			url: '/chatRoom/users',
+			url: '/chattingRoom/users',
 			contentType:'application/json; charset=UTF-8',
 			cache: false, //새로 추가 16.10.04  IE에서 기존 유저 새로고침 할 시 나감 처리 및 새로운 유저 입장 처리 해주기 위해 캐쉬 false;
 			headers: userInfo,
@@ -144,7 +144,7 @@ var ChatClient = function() {
 		if (userInfo.userIdx !== -1 && userInfo.programIdx !== -1) {
 			$.ajax({
 				method: "GET",
-				url: '/event',
+				url: '/chattingRoom/event',
 				contentType:'application/json; charset=UTF-8',
 				cache: false,
 				headers: userInfo

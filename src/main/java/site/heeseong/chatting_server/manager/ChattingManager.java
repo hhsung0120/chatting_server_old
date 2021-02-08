@@ -5,11 +5,14 @@ import org.springframework.stereotype.Component;
 import site.heeseong.chatting_server.exceptions.BadArgumentException;
 import site.heeseong.chatting_server.exceptions.ChatRoomExistException;
 import site.heeseong.chatting_server.exceptions.UserExistException;
+import site.heeseong.chatting_server.exceptions.UserNotExistException;
 import site.heeseong.chatting_server.mapper.ChattingMapper;
 import site.heeseong.chatting_server.mapper.ContextMapper;
 import site.heeseong.chatting_server.model.*;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Log4j2
@@ -462,23 +465,23 @@ public class ChattingManager {
 			saveRooms();
 		}
 	}
-	
+	*/
 	public ArrayList<Users> getUserList(int roomIdx) {
 		ArrayList<Users> userList = new ArrayList<Users>();
 		
-		ChatRoomManager chatRoomManager = chattingRooms.get(roomIdx);
-		if (chatRoomManager == null) {
+		ChattingRoomManager chattingRoomManager = chattingRooms.get(roomIdx);
+		if (chattingRoomManager == null) {
 			return null;
 		}
-		for (Entry<Long, Users> userEntry : chatRoomManager.getUserList().entrySet()) {
+		for (Map.Entry<Long, Users> userEntry : chattingRoomManager.getUserList().entrySet()) {
 			
 			userList.add(userEntry.getValue());
 		}
 		return userList;
 	}
-	
+
 	public ArrayList<Event> getNewEvents(long internalIdx) throws Exception {
-		ChatUser user = chattingUsers.get(internalIdx);
+		ChattingUser user = chattingUsers.get(internalIdx);
 		if (user == null) {
 			log.debug("getNewEvents : NO User : " + internalIdx);
 			throw new UserNotExistException();
@@ -486,7 +489,7 @@ public class ChattingManager {
 		
 		return user.getEvents();
 	}
-	
+	/*
 	private void sendEventToAll(long internalIdx, Event event, boolean sendMyself) {
 		for (Entry<Long, ChatUser> userEntry : chattingUsers.entrySet()) {
 			ChatUser user = userEntry.getValue();

@@ -10,6 +10,8 @@ import site.heeseong.chatting_server.model.EnterRoomResult;
 import site.heeseong.chatting_server.model.Event;
 import site.heeseong.chatting_server.model.Users;
 
+import java.util.ArrayList;
+
 
 @Service
 public class ChattingService {
@@ -50,10 +52,11 @@ public class ChattingService {
 		return chatManager.updateChatRoom(internalIdx, roomInfo);
 	}
 
+*/
 	public ArrayList<Users> listUsers(int roomIdx) {
-		return chatManager.getUserList(roomIdx);
+		return chattingManagerService.getUserList(roomIdx);
 	}
-
+/*
 	
 	public void leaveChatRoom(int programIdx, int userIdx, long internalIdx) throws Exception {
 		chatManager.leaveChatRoom(internalIdx, programIdx, null);
@@ -101,11 +104,11 @@ public class ChattingService {
 		
 		return chatDTO;
 	}
-	
+	*/
 	public ArrayList<Event> getNewEvents(long internalIdx) throws Exception {
-		return chatManager.getNewEvents(internalIdx);
+		return chattingManagerService.getNewEvents(internalIdx);
 	}
-
+	/*
 	public List<Event> getBeforeMessage(int userIdx, String userId, String roomName) {
 		// TODO Auto-generated method stub
 		if("admin".equals(userId)){

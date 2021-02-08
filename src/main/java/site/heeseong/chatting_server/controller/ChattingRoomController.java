@@ -9,15 +9,17 @@ import site.heeseong.chatting_server.model.EnterRoomResult;
 import site.heeseong.chatting_server.model.Users;
 import site.heeseong.chatting_server.service.ChattingService;
 
+import java.util.ArrayList;
+
 @Log4j2
 @RestController
 @RequestMapping("/chattingRoom")
-public class ChatRoomController {
+public class ChattingRoomController {
 
 	private final ChattingService chattingService;
 
 	@Autowired
-	public ChatRoomController(ChattingService chattingService){
+	public ChattingRoomController(ChattingService chattingService){
 		this.chattingService = chattingService;
 	}
 
@@ -39,5 +41,16 @@ public class ChatRoomController {
 		Users users = new Users(chattingRoom.getUserIdx(), chattingRoom.getUserId(), chattingRoom.getUserName(), chattingRoom.isAdmin());
 
 		return chattingService.enterChatRoom(chattingRoom, users);
+	}
+
+	@RequestMapping(value="/users", method=RequestMethod.GET)
+	public ArrayList<Users> listUsers(
+			@RequestHeader("internalIdx") long internalIdx,
+			@RequestHeader("programIdx") int programidx,
+			@RequestHeader("userIdx") int userIdx,
+			@RequestHeader("admin") boolean admin) throws Exception {
+
+		log.info("sdfsdfsdfsdfsf");
+		return chattingService.listUsers(programidx);
 	}
 }
