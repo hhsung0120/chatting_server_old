@@ -45,7 +45,7 @@ public class EventManager {
 		return event;
 	}
 	
-	public static Event makeLeaveRoomEvent(int programIdx, int userIdx) {
+	public static Event makeLeaveRoomEvent(int programIdx, long userIdx) {
 		Event event = new Event();
 		
 		event.setType(EventType.LEAVE_USER.getValue());

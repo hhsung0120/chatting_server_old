@@ -136,7 +136,7 @@ public class ChattingRoomManager {
 		}
 	}
 	
-	public boolean isBlackList(int userIdx) {
+	public boolean isBlackList(long userIdx) {
 		return blackList.contains(userIdx);
 	}
 

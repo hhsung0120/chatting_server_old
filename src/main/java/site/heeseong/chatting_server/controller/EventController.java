@@ -1,10 +1,7 @@
 package site.heeseong.chatting_server.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import site.heeseong.chatting_server.model.Event;
 import site.heeseong.chatting_server.service.ChattingService;
 
@@ -23,18 +20,17 @@ public class EventController {
 
 	
 
-/*	@RequestMapping(value="/event", method=RequestMethod.POST)
-	public EventDTO sendEvent(
+	@RequestMapping(value="/event", method=RequestMethod.POST)
+	public Event sendEvent(
 			@RequestHeader("internalIdx") int internalIdx,
-    		@RequestBody EventDTO chatDTO) throws Exception {
+    		@RequestBody Event chatDTO) throws Exception {
 		chatDTO = chattingService.sendEvent(internalIdx,chatDTO);
 		return chatDTO;
-	}*/
+	}
 
 	@RequestMapping(value="/event", method=RequestMethod.GET)
 	public ArrayList<Event> getEvent(
 			@RequestHeader("internalIdx") int internalIdx) throws Exception {
-		
 
 		ArrayList<Event> chattings = chattingService.getNewEvents(internalIdx);
 		return chattings;

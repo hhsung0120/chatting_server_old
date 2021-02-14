@@ -72,7 +72,10 @@ function sendMessage(){
 		ChatClient.sendMessage(msg, function() {
 			$("#chat-message").val('');
 		});
+	}else{
+		alert('메시지를 입력 하세요.')
 	}
+
 }
 function updateChatRoom(){
 	ChatClient.updateChatRoom({chatRoomType:2}, function(data) {
@@ -196,7 +199,7 @@ var exitChatRoom = function(aync) {
 var processEvents = function(events) {
 	if (events && events.length > 0) {
 		events.forEach (function(event) {
-			console.log(event.type)
+			console.log(event)
 			switch(event.type) {
 				case eventType.NORMAL_MSG:
 					console.log('NORMAL_CHAT');
@@ -206,21 +209,21 @@ var processEvents = function(events) {
 					if(event.fromUserIdx==userInfo.userMessageIdx && event.name == 'admin'){
 						$('#chat-messages').append('<li class="admin"><div class="clear"><p class="name fl">'+"Admin"/*event.name*/+'</p>'+
 							'<div class="fr">'+
-							'</div></div><div class="cont"><span class="bg_top"></span><p class="txt">'+event.msg+'</p>'+
+							'</div></div><div class="cont"><span class="bg_top"></span><p class="txt">'+event.message+'</p>'+
 							'<span class="bg_bottom"></span></div></li>');
 					}else if(event.fromUserIdx!=userInfo.userMessageIdx && event.name == 'admin'){
 						$('#chat-messages').append('<li class="admin"><div class="clear"><p class="name fl">'+"Admin"/*event.name*/+'</p>'+
-							'<div class="fr"></div></div><div class="cont"><span class="bg_top"></span><p class="txt">'+event.msg+'</p>'+
+							'<div class="fr"></div></div><div class="cont"><span class="bg_top"></span><p class="txt">'+event.message+'</p>'+
 							'<span class="bg_bottom"></span></div></li>');
 					}else if(event.fromUserIdx!=userInfo.userMessageIdx && event.name != 'admin'){
 						$('#chat-messages').append('<li class="me"><p class="name"><div class="clear">'+event.name+'<a href="#"><img src="/img/admin/ico_caution.png" alt="" /></a>'
 							+'<div class="fr"><a href="#"><img src="/img/admin/ico_t2.png" alt="" /></a><a href="#"><img src="/img/admin/ico_t3.png" alt="" /></a>'+
-							'</div></div></p><div class="cont"><span class="bg_top"></span><p class="txt">'+event.msg+'</p><span class="bg_bottom"></span>'+
+							'</div></div></p><div class="cont"><span class="bg_top"></span><p class="txt">'+event.message+'</p><span class="bg_bottom"></span>'+
 							'</div></li>');
 					}
 					else{
 						$("#chat-messages").append('<li class="me"><p class="name">'+event.name+'</p><div class="cont">'
-							+'<span class="bg_top"></span><p class="txt">'+event.msg+'</p><span class="bg_bottom"></span>'+
+							+'<span class="bg_top"></span><p class="txt">'+event.message+'</p><span class="bg_bottom"></span>'+
 							'</div></li>');
 					}
 					break;
@@ -232,11 +235,11 @@ var processEvents = function(events) {
 					break;
 				case eventType.DIRECT_MSG:
 					console.log('DIRECT_MSG')
-					$('#chat-messages').append('<li class="list-group-item chat-message direct_message col-lg-12">' + event.userId + '(' + event.name + ') : ' + event.msg + '</li>');
+					$('#chat-messages').append('<li class="list-group-item chat-message direct_message col-lg-12">' + event.userId + '(' + event.name + ') : ' + event.message + '</li>');
 					break;
 				case eventType.ADMIN_MSG:
 					console.log('ADMIN_MSG')
-					$('#chat-messages').append('<li class="list-group-item chat-message admin_message col-lg-12">' + event.userId + '(' + event.name + ') : ' + event.msg + '</li>');
+					$('#chat-messages').append('<li class="list-group-item chat-message admin_message col-lg-12">' + event.userId + '(' + event.name + ') : ' + event.message + '</li>');
 					break;
 				case eventType.BLOCKED_MSG:
 					console.log('BLOCKED_MSG');
@@ -245,7 +248,7 @@ var processEvents = function(events) {
 				case eventType.CREATE_CHATROOM:
 //					var tr = $('<tr>', {
 //						id: "ROOM_" + event.programIdx
-//					}).append('<td>' + event.name + '</td><td>' + event.userId + '</td><td>' + event.msg +'</td>');
+//					}).append('<td>' + event.name + '</td><td>' + event.userId + '</td><td>' + event.message +'</td>');
 //					tr.click(function() {
 //						ChatClient.enterChatRoom(room.programIdx, '', '', '', 0, function(data) {
 //							drawEnterChatRoom(event.programIdx, data.name, data.userIdx);
@@ -270,7 +273,7 @@ var processEvents = function(events) {
 					console.log('REQ_APPROVAL_MSG');
 					var req_approval_msg = $('<li>', {
 						'class':'list-group-item approve_message col-lg-12'
-					}).html('<div class="col-lg-12">' + event.userId + '(' + event.name + ') : ' + event.msg + '</div>')
+					}).html('<div class="col-lg-12">' + event.userId + '(' + event.name + ') : ' + event.message + '</div>')
 					var approve_button = $('<button>', {
 						'type':'button',
 						'class': 'btn btn-default col-lg-6',
@@ -283,17 +286,17 @@ var processEvents = function(events) {
 					req_approval_msg.append(reject_button);
 
 					approve_button.click(function() {
-						ChatClient.approveMessage(event.fromUserIdx, event.userId, event.name, event.msg);
+						ChatClient.approveMessage(event.fromUserIdx, event.userId, event.name, event.message);
 					});
 					reject_button.click(function() {
-						ChatClient.rejectMessage(event.fromUserIdx, event.userId, event.name, event.msg);
+						ChatClient.rejectMessage(event.fromUserIdx, event.userId, event.name, event.message);
 					});
 
 					$('#chat-messages').append(req_approval_msg);
 					break;
 				case eventType.WAIT_APPROVAL_MSG:
 					console.log('WAIT_APPROVAL_MSG');
-					$('#chat-messages').append('<li class="list-group-item chat-message col-lg-12">Wait Approval message : ' + event.msg + '</li>');
+					$('#chat-messages').append('<li class="list-group-item chat-message col-lg-12">Wait Approval message : ' + event.message + '</li>');
 					break;
 			}
 		});

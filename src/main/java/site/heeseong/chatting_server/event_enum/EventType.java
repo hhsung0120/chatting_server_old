@@ -25,6 +25,10 @@ public enum EventType {
     private int value = 0;
     private String textValue = "";
 
+    EventType(int value){
+        this.value = value;
+    }
+
     EventType(int value, String textValue){
         this.value = value;
         this.textValue = textValue;

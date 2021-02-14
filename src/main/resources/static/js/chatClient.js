@@ -108,14 +108,16 @@ var ChatClient = function() {
 			}
 		});
 	}
-	
+
 	var getUserList = function(callback) {
 		$.ajax({
 			method: "GET",
 			url: '/chattingRoom/users',
 			contentType:'application/json; charset=UTF-8',
 			cache: false, //새로 추가 16.10.04  IE에서 기존 유저 새로고침 할 시 나감 처리 및 새로운 유저 입장 처리 해주기 위해 캐쉬 false;
-			headers: userInfo,
+			data: {
+				'programIdx' : userInfo.programIdx
+			},
 		}).done(function(data){
 			if (callback) {
 				callback(data);
@@ -134,7 +136,6 @@ var ChatClient = function() {
 			//alert("getChatRoomList done" + userInfo.programIdx);
 			if (callback) {
 				callback(data);
-				
 			}
 		});
 	};
@@ -164,18 +165,18 @@ var ChatClient = function() {
 		};
 	};
 	
-	var sendMessage = function(msg, callback) {
+	var sendMessage = function(message, callback) {
 		var sendData = {
-			programIdx : userInfo.programIdx,
-			fromUserIdx : userInfo.userIdx,
-			userId : userInfo.userId,//userInfo.userId, 16.10.05 원래 데이타  //userId 원래 변수 17.05.17
-			name : userInfo.userName,//userInfo.userName, 16.10.05 원래 데이타 //userName 원래 변수 17.05.17 수정
-			msg : msg,
-			type : eventType.NORMAL_MSG//NORMAL_CHAT 16.10.05 오타 의심
+			programIdx : userInfo.programIdx
+			, fromUserIdx : userInfo.userIdx
+			, userId : userInfo.userId
+			, name : userInfo.userName
+			, message : message
+			, type : eventType.NORMAL_MSG
 		};
 		$.ajax({
 			method: "POST",
-			url: '/event',
+			url: '/chattingRoom/event',
 			contentType:'application/json; charset=UTF-8',
 			headers: userInfo,
 			data: JSON.stringify(sendData)

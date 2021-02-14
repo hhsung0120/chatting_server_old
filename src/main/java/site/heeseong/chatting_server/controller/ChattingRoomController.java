@@ -44,13 +44,7 @@ public class ChattingRoomController {
 	}
 
 	@RequestMapping(value="/users", method=RequestMethod.GET)
-	public ArrayList<Users> listUsers(
-			@RequestHeader("internalIdx") long internalIdx,
-			@RequestHeader("programIdx") int programidx,
-			@RequestHeader("userIdx") int userIdx,
-			@RequestHeader("admin") boolean admin) throws Exception {
-
-		log.info("sdfsdfsdfsdfsf");
-		return chattingService.listUsers(programidx);
+	public ArrayList<Users> listUsers(@RequestParam("programIdx") int programIdx){
+		return chattingService.listUsers(programIdx);
 	}
 }

@@ -28,6 +28,7 @@ public class Event {
 		this.to_userId = to_userId;
 	}
 
+
 	public Event(int type, int idx, String userid, String username) {
 		this(type, -1, idx, -1, userid, username, "","");
 	}

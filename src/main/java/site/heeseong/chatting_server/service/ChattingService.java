@@ -53,7 +53,7 @@ public class ChattingService {
 	}
 
 */
-	public ArrayList<Users> listUsers(int roomIdx) {
+	public ArrayList<Users> listUsers(int roomIdx){
 		return chattingManagerService.getUserList(roomIdx);
 	}
 /*
@@ -82,9 +82,8 @@ public class ChattingService {
 		Event roomEvent = new Event(EventType.REMOVE_BLACKLIST, programIdx, userIdx, blackUser, "", "", "","");
 		chattingMapper.insertEvent(roomEvent);
 	}
-	
+	*/
 	public Event sendEvent(long internalIdx, Event chatDTO) throws Exception{
-
 		System.out.println(chatDTO);
 		Event e = new Event();
 		String enen = chatDTO.getMessage();
@@ -92,22 +91,25 @@ public class ChattingService {
 		e.setProgramIdx(chatDTO.getProgramIdx());
 		e.setFrom_userIdx(chatDTO.getFrom_userIdx());
 		e.setTo_userIdx(chatDTO.getTo_userIdx());
-		e.setTo_UserId(chatDTO.getTo_UserId());
+		e.setTo_userId(chatDTO.getTo_userId());
 		e.setUserId(chatDTO.getUserId());
 		e.setName(chatDTO.getName());
-		e.setMsg(enen);
-		
+		e.setMessage(enen);
+
 		chattingMapper.insertEvent(e);
 		chatDTO.setIdx(e.getIdx());
-		chatManager.sendEvent(internalIdx, chatDTO);
-		chattingMapper.insertMessageTypeUpdate(chatDTO);
+		chattingManagerService.sendEvent(internalIdx, chatDTO);
+
+		//TODO: 이거 왜 하는지 나중에 분석
+		//chattingMapper.insertMessageTypeUpdate(chatDTO);
 		
 		return chatDTO;
 	}
-	*/
+
 	public ArrayList<Event> getNewEvents(long internalIdx) throws Exception {
 		return chattingManagerService.getNewEvents(internalIdx);
 	}
+
 	/*
 	public List<Event> getBeforeMessage(int userIdx, String userId, String roomName) {
 		// TODO Auto-generated method stub
