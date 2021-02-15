@@ -3,7 +3,6 @@ package site.heeseong.chatting_server.controller;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import site.heeseong.chatting_server.event_enum.EventType;
 import site.heeseong.chatting_server.model.ChattingRoom;
 import site.heeseong.chatting_server.model.EnterRoomResult;
 import site.heeseong.chatting_server.model.Users;
