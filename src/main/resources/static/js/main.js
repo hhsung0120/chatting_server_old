@@ -108,6 +108,7 @@ function leaveChatRoom(){
 }
 
 var addUserToUserList = function(userIdx, userId, userName) {
+
 	var newUser = $('<li>', {
 		'class': 'list-group-item col-lg-12',
 		'id' : 'USER_' +  userIdx,

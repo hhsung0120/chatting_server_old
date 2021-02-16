@@ -82,7 +82,7 @@ public class ChattingManager {
 				throw new ChatRoomExistException();
 			}
 
-			ChattingRoomData newChattingRoomData = new ChattingRoomData();
+			ChattingRoom newChattingRoomData = new ChattingRoom();
 			newChattingRoomData.setProgramIdx(chattingRoom.getProgramIdx());
 			newChattingRoomData.setName(chattingRoom.getName());
 			newChattingRoomData.setPassword(chattingRoom.getPassword());

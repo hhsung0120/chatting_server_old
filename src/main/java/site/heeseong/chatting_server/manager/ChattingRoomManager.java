@@ -2,7 +2,8 @@ package site.heeseong.chatting_server.manager;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import site.heeseong.chatting_server.model.ChattingRoomData;
+
+import site.heeseong.chatting_server.model.ChattingRoom;
 import site.heeseong.chatting_server.model.Users;
 
 import java.util.HashSet;
@@ -12,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Data
 public class ChattingRoomManager {
 
-	private ChattingRoomData chattingRoomData;
+	private ChattingRoom chattingRoomData;
 	private ConcurrentHashMap<Long, Users> users;
 	private Object userLock = new Object();
 	private HashSet<Integer> blackList = new HashSet<Integer>();
