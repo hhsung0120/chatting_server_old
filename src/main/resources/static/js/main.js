@@ -108,7 +108,6 @@ function leaveChatRoom(){
 }
 
 var addUserToUserList = function(userIdx, userId, userName) {
-
 	var newUser = $('<li>', {
 		'class': 'list-group-item col-lg-12',
 		'id' : 'USER_' +  userIdx,
@@ -198,9 +197,11 @@ var exitChatRoom = function(aync) {
 };
 
 var processEvents = function(events) {
+	console.log("gdgd");
 	if (events && events.length > 0) {
 		events.forEach (function(event) {
-			console.log(event)
+			console.log("processEvents : ")
+			console.log(events)
 			switch(event.type) {
 				case eventType.NORMAL_MSG:
 					console.log('NORMAL_CHAT');

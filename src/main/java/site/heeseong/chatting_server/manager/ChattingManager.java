@@ -63,8 +63,8 @@ public class ChattingManager {
 			chattingMapper.insertEvent(event);
 		}
 
-		//saveUsers();
-		//saveRooms();
+		saveUsers();
+		saveRooms();
 
 		EnterRoomResult newResult = new EnterRoomResult(chattingUser.getInternalIdx(), chattingRoomManager.getChattingRoomData());
 

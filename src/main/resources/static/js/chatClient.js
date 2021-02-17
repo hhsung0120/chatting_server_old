@@ -40,7 +40,6 @@ var ChatClient = function() {
 				type: type,
 			};
 
-			console.log(userInfo)
 			$.ajax({
 				method : "POST",
 				url : '/chattingRoom/enterUser',
