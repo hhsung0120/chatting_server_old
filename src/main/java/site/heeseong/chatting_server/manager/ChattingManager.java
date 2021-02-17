@@ -413,8 +413,8 @@ public class ChattingManager {
 				chattingMapper.insertEvent(event);
 			}
 			
-			saveUsers();
-			saveRooms();
+			//saveUsers();
+			//saveRooms();
 		}
 		else {
 			throw new BadArgumentException();
