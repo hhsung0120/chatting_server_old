@@ -13,7 +13,7 @@ import site.heeseong.chatting_server.model.*;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Log4j2
@@ -62,9 +62,6 @@ public class ChattingManager {
 			Event event = EventManager.makeEnterRoomEvent(chattingRoom.getProgramIdx(), users);
 			chattingMapper.insertEvent(event);
 		}
-
-		saveUsers();
-		saveRooms();
 
 		EnterRoomResult newResult = new EnterRoomResult(chattingUser.getInternalIdx(), chattingRoomManager.getChattingRoomData());
 
@@ -368,7 +365,7 @@ public class ChattingManager {
 	}
 
 
-	public int removeUser(long internalIdx, Iterator<Map.Entry<Long, ChattingUser>> userIteration) throws Exception {
+	public int removeUser(long internalIdx, Iterator<Entry<Long, ChattingUser>> userIteration) throws Exception {
 		ChattingUser user = chattingUsers.get(internalIdx);
 		if (user == null) {
 			return -1;
@@ -390,7 +387,7 @@ public class ChattingManager {
 	
 
 
-	public int leaveChatRoom(long internalIdx, int roomIdx, Iterator<Map.Entry<Long, ChattingUser>> userIteration) throws Exception {
+	public int leaveChatRoom(long internalIdx, int roomIdx, Iterator<Entry<Long, ChattingUser>> userIteration) throws Exception {
 		if (roomIdx != -1) {
 			ChattingRoomManager chatRoomManager = chattingRooms.get(roomIdx);
 			if (chatRoomManager == null) {
@@ -475,15 +472,18 @@ public class ChattingManager {
 		if (chattingRoomManager == null) {
 			return null;
 		}
-		for (Map.Entry<Long, Users> userEntry : chattingRoomManager.getUserList().entrySet()) {
-			
+
+		for (Entry<Long, Users> userEntry : chattingRoomManager.getUserList().entrySet()) {
 			userList.add(userEntry.getValue());
 		}
+
 		return userList;
 	}
 
 	public ArrayList<Event> getNewEvents(long internalIdx) throws Exception {
 		ChattingUser user = chattingUsers.get(internalIdx);
+		System.out.println("어디보자");
+		System.out.println(user.toString());
 		if (user == null) {
 			log.debug("getNewEvents : NO User : " + internalIdx);
 			throw new UserNotExistException();

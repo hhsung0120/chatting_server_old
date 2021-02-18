@@ -50,6 +50,7 @@ var ChatClient = function() {
 				userInfo.internalIdx = data.internalIdx;
 				userInfo.programIdx = data.programIdx;
 				if (callback) {
+					console.log("enterUser 성공")
 					callback(data);
 				}
 			}).fail(function(data) {
@@ -109,6 +110,7 @@ var ChatClient = function() {
 	}
 
 	var getUserList = function(callback) {
+
 		$.ajax({
 			method: "GET",
 			url: '/chattingRoom/users',
@@ -118,7 +120,10 @@ var ChatClient = function() {
 				'programIdx' : userInfo.programIdx
 			},
 		}).done(function(data){
+			console.log("getUserList ajx 성공")
+			console.log(data)
 			if (callback) {
+				console.log("getUserList 콜백 호출")
 				callback(data);
 			}
 		});
@@ -149,14 +154,17 @@ var ChatClient = function() {
 				cache: false,
 				headers: userInfo
 			}).done(function(data){
+				console.log(data)
+				console.log("getNewEvent 성공")
 				if (callback) {
+					console.log("callback 호출")
 					callback(data);
 				}
 				if (userInfo && typeof userInfo.userIdx !== 'undefined' && userInfo.userIdx !== -1 && userInfo.programIdx !== -1) {
+					console.log("getNewEvent 호출")
 					getNewEvent(callback);
 				}
 			}).fail(function() {
-				// when server is down
 				setTimeout(function() {
 					getNewEvent(callback);
 				}, 1000);

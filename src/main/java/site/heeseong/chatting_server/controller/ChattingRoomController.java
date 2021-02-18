@@ -44,6 +44,7 @@ public class ChattingRoomController {
 
 	@RequestMapping(value="/users", method=RequestMethod.GET)
 	public ArrayList<Users> listUsers(@RequestParam("programIdx") int programIdx){
+		System.out.println("호출되나 ?");
 		return chattingService.listUsers(programIdx);
 	}
 }

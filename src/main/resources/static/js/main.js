@@ -28,42 +28,6 @@ function createChatRoom(){
 		ChatClient.getNewEvent(processEvents);
 		drawEnterChatRoom(programIdx, data.name, data.userIdx);
 	});
-
-	/*ChatClient.getBeforeMessage(userId,userIdx,chatRoomName,function(data){
-		if (data) {
-			for(var i=0; i<data.length; i++){
-				if(data[i].name=="admin"){
-					$('#chat-messages').append('<li class="admin"><div class="clear"><p class="name fl">'+"Admin"/!*data[i].name*!/+'</p>'+
-						'<div class="fr"></div></div><div class="cont"><span class="bg_top"></span><p class="txt">'+data[i].message+'</p>'+
-						'<span class="bg_bottom"></span></div></li>');
-				}else{
-					$('#chat-messages').append('<li class="me"><p class="name">'+data[i].name+'</p><div class="cont">'
-						+'<span class="bg_top"></span><p class="txt">'+data[i].message+'</p><span class="bg_bottom"></span>'+
-						'</div></li>');
-				}
-			}
-		}
-	});
-	ChatClient.getBeforeMessage(userId,userIdx,chatRoomName,function(data){
-		console.log(1)
-		if (data) {
-			for(var i=0; i<data.length; i++){
-				//console.log(data)
-				// console.log(data[i].message + ","+data[i].name + ","+ data[i].from_userIdx+","+data[i].programIdx );
-				if(data[i].name=="admin"){
-					$('#chat-messages').append('<li class="admin"><div class="clear"><p class="name fl">'+"Admin"/!*data[i].name*!/+'</p>'+
-						'<div class="fr">'+
-						'</div></div><div class="cont"><span class="bg_top"></span><p class="txt">'+data[i].message+'</p>'+
-						'<span class="bg_bottom"></span></div></li>');
-				}else{
-					$('#chat-messages').append('<li class="me"><p class="name"><div class="clear">'+data[i].name+'<a href="#"><img src="/img/admin/ico_caution.png" alt="" /></a>'
-						+'<div class="fr"><a href="#"><img src="/img/admin/ico_t2.png" alt="" /></a><a href="#"><img src="/img/admin/ico_t3.png" alt="" /></a>'+
-						'</div></div></p><div class="cont"><span class="bg_top"></span><p class="txt">'+data[i].message+'</p><span class="bg_bottom"></span>'+
-						'</div></li>');
-				}
-			}
-		}
-	});*/
 }
 
 function sendMessage(){
@@ -108,6 +72,7 @@ function leaveChatRoom(){
 }
 
 var addUserToUserList = function(userIdx, userId, userName) {
+	console.log("addUserToUserList");
 	var newUser = $('<li>', {
 		'class': 'list-group-item col-lg-12',
 		'id' : 'USER_' +  userIdx,
@@ -122,6 +87,7 @@ var addUserToUserList = function(userIdx, userId, userName) {
 	newUser.append(newUserDiv);
 
 	if (ChatClient.getUserIdx() !== userIdx) {
+
 		newUserDiv.addClass('otheruser');
 
 		newUserDiv.click(function(e) {
@@ -154,17 +120,23 @@ var addUserToUserList = function(userIdx, userId, userName) {
 
 			newUser.append(spanBlock);
 		}
+	}else{
+		console.log("못그림")
 	}
 
+	console.log(newUser);
 	$('#user-list').append(newUser);
 
 };
 
 var getUserList = function() {
+
 	ChatClient.getUserList(function(data) {
+		console.log("getUserList")
 		$('#user-list').empty();
 		if (data && data.length !== 0) {
 			data.forEach (function(user) {
+				console.log("data.forEach ")
 				addUserToUserList(user.userIdx, user.userId, user.userName);
 			});
 		}
@@ -172,6 +144,7 @@ var getUserList = function() {
 };
 
 var drawEnterChatRoom = function(programIdx, name) {
+	console.log("drawEnterChatRoom 호출 ")
 	if (programIdx !== -1) {
 		$('#room-name').html(name);
 		$('#chatting-room').show();
@@ -197,11 +170,11 @@ var exitChatRoom = function(aync) {
 };
 
 var processEvents = function(events) {
-	console.log("gdgd");
+	console.log(events);
+	console.log(events.length);
+
 	if (events && events.length > 0) {
 		events.forEach (function(event) {
-			console.log("processEvents : ")
-			console.log(events)
 			switch(event.type) {
 				case eventType.NORMAL_MSG:
 					console.log('NORMAL_CHAT');

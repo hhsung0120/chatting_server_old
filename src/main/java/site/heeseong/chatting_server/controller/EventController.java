@@ -24,16 +24,15 @@ public class EventController {
 	public Event sendEvent(
 			@RequestHeader("internalIdx") int internalIdx,
     		@RequestBody Event chatDTO) throws Exception {
-		chatDTO = chattingService.sendEvent(internalIdx,chatDTO);
-		return chatDTO;
+
+		return chattingService.sendEvent(internalIdx,chatDTO);
 	}
 
 	@RequestMapping(value="/event", method=RequestMethod.GET)
 	public ArrayList<Event> getEvent(
 			@RequestHeader("internalIdx") int internalIdx) throws Exception {
 
-		ArrayList<Event> chattings = chattingService.getNewEvents(internalIdx);
-		return chattings;
+		return chattingService.getNewEvents(internalIdx);
 	}
 	
 	
