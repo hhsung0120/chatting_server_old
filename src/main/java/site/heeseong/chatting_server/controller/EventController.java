@@ -18,7 +18,13 @@ public class EventController {
 		this.chattingService = chattingService;
 	}
 
-	
+
+	@RequestMapping(value="/event", method=RequestMethod.GET)
+	public ArrayList<Event> getEvent(
+			@RequestHeader("internalIdx") int internalIdx) throws Exception {
+
+		return chattingService.getNewEvents(internalIdx);
+	}
 
 	@RequestMapping(value="/event", method=RequestMethod.POST)
 	public Event sendEvent(
@@ -28,14 +34,6 @@ public class EventController {
 		return chattingService.sendEvent(internalIdx,chatDTO);
 	}
 
-	@RequestMapping(value="/event", method=RequestMethod.GET)
-	public ArrayList<Event> getEvent(
-			@RequestHeader("internalIdx") int internalIdx) throws Exception {
-
-		return chattingService.getNewEvents(internalIdx);
-	}
-	
-	
 	/*@RequestMapping(value="/message",method=RequestMethod.GET)
 	public List<EventDTO> getBeforeMessage(
 			@RequestParam("userIdx") int userIdx,

@@ -130,7 +130,6 @@ var addUserToUserList = function(userIdx, userId, userName) {
 };
 
 var getUserList = function() {
-
 	ChatClient.getUserList(function(data) {
 		console.log("getUserList")
 		$('#user-list').empty();
@@ -175,6 +174,7 @@ var processEvents = function(events) {
 
 	if (events && events.length > 0) {
 		events.forEach (function(event) {
+			console.log(event.type);
 			switch(event.type) {
 				case eventType.NORMAL_MSG:
 					console.log('NORMAL_CHAT');
