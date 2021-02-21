@@ -60,6 +60,7 @@ public class ChattingManager {
 		chattingUser.setProgramIdx(chattingRoom.getProgramIdx());
 		if (notify) {
 			Event event = EventManager.makeEnterRoomEvent(chattingRoom.getProgramIdx(), users);
+			sendEvent(users.getInternalIdx(), event);
 			chattingMapper.insertEvent(event);
 		}
 
@@ -482,8 +483,6 @@ public class ChattingManager {
 
 	public ArrayList<Event> getNewEvents(long internalIdx) throws Exception {
 		ChattingUser user = chattingUsers.get(internalIdx);
-		System.out.println("어디보자");
-		System.out.println(user.toString());
 		if (user == null) {
 			log.debug("getNewEvents : NO User : " + internalIdx);
 			throw new UserNotExistException();
@@ -633,11 +632,13 @@ public class ChattingManager {
 
 	public void sendEvent(long internalIdx, Event event) throws Exception {
 
-		if(event.getType() == EventType.NORMAL_MSG.getValue()){
+		if(event.getType() == EventType.NORMAL_MSG.getValue()) {
 			sendMessage(internalIdx, event);
+		}else if(event.getType() == EventType.ENTER_USER.getValue()){
+			sendEventToRoom(internalIdx, event, false);
 		}
-		switch (event.getType()) {
-		/*case EventType.NORMAL_MSG:
+		/*switch (event.getType()) {
+		case EventType.NORMAL_MSG:
 			sendMessage(internalIdx, event);
 			break;
 		case EventType.DIRECT_MSG:
@@ -672,8 +673,8 @@ public class ChattingManager {
 			break;
 		case EventType.UPDATE_CHATROOM:
 			sendEventToRoom(internalIdx, event, false);
-			break;*/
-		}
+			break;
+		}*/
 	}
 
 	/*

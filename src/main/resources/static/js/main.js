@@ -131,11 +131,9 @@ var addUserToUserList = function(userIdx, userId, userName) {
 
 var getUserList = function() {
 	ChatClient.getUserList(function(data) {
-		console.log("getUserList")
 		$('#user-list').empty();
 		if (data && data.length !== 0) {
 			data.forEach (function(user) {
-				console.log("data.forEach ")
 				addUserToUserList(user.userIdx, user.userId, user.userName);
 			});
 		}
@@ -143,7 +141,6 @@ var getUserList = function() {
 };
 
 var drawEnterChatRoom = function(programIdx, name) {
-	console.log("drawEnterChatRoom 호출 ")
 	if (programIdx !== -1) {
 		$('#room-name').html(name);
 		$('#chatting-room').show();
@@ -169,17 +166,10 @@ var exitChatRoom = function(aync) {
 };
 
 var processEvents = function(events) {
-	console.log(events);
-	console.log(events.length);
-
 	if (events && events.length > 0) {
 		events.forEach (function(event) {
-			console.log(event.type);
 			switch(event.type) {
 				case eventType.NORMAL_MSG:
-					console.log('NORMAL_CHAT');
-					console.log(" event.fromUserIdx : " + event.fromUserIdx + "userMessageIdx : " + userInfo.userMessageIdx +
-						"event.name : " +event.name );
 					//관리자 화면 admin 일때 자기 자신 아이콘 안보임 (웹적용)
 					if(event.fromUserIdx==userInfo.userMessageIdx && event.name == 'admin'){
 						$('#chat-messages').append('<li class="admin"><div class="clear"><p class="name fl">'+"Admin"/*event.name*/+'</p>'+

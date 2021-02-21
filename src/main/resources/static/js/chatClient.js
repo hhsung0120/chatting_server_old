@@ -50,7 +50,6 @@ var ChatClient = function() {
 				userInfo.internalIdx = data.internalIdx;
 				userInfo.programIdx = data.programIdx;
 				if (callback) {
-					console.log("enterUser 성공")
 					callback(data);
 				}
 			}).fail(function(data) {
@@ -120,10 +119,7 @@ var ChatClient = function() {
 				'programIdx' : userInfo.programIdx
 			},
 		}).done(function(data){
-			console.log("getUserList ajx 성공")
-			console.log(data)
 			if (callback) {
-				console.log("getUserList 콜백 호출")
 				callback(data);
 			}
 		});
@@ -154,14 +150,10 @@ var ChatClient = function() {
 				cache: false,
 				headers: userInfo
 			}).done(function(data){
-				console.log(data)
-				console.log("getNewEvent 성공")
 				if (callback) {
-					console.log("callback 호출")
 					callback(data);
 				}
 				if (userInfo && typeof userInfo.userIdx !== 'undefined' && userInfo.userIdx !== -1 && userInfo.programIdx !== -1) {
-					console.log("getNewEvent 호출")
 					getNewEvent(callback);
 				}
 			}).fail(function() {
@@ -188,12 +180,10 @@ var ChatClient = function() {
 			headers: userInfo,
 			data: JSON.stringify(sendData)
 		}).done(function(data){
-			console.log('sendMessage');
 			if (callback) {
 				callback(data);
 			}
 		}).fail(function(data){
-			console.log(data);
 			var keys = Object.keys(data);
 			var obj = JSON.parse(data[keys[18]]);
 			if(obj.exception==="server.chat.exceptions.BadArgumentException"){
@@ -221,7 +211,6 @@ var ChatClient = function() {
 				data: JSON.stringify(sendData)
 			}).done(function(data){
 				if (callback) {
-					console.log("sendAdminMessage");
 					callback(data);
 				}
 			});		
@@ -247,7 +236,6 @@ var ChatClient = function() {
 			data: JSON.stringify(sendData)
 		}).done(function(data){
 			if (callback) {
-				console.log("sendDirectMessage");
 				callback(data);
 			}
 		});		
@@ -321,7 +309,6 @@ var ChatClient = function() {
 			data: JSON.stringify(sendData)
 		}).done(function(data){
 			if (callback) {
-				console.log("approveMessage");
 				callback(data);
 			}
 		});			
@@ -368,9 +355,6 @@ var ChatClient = function() {
 		});
 	};
 	var getBlackUserList = function(roomName,callback){
-		console.log("getBlackUserList");
-		//console.log(userInfo);
-		
 		$.ajax({
 			method : "GET",
 			url : "/blackUserList",
@@ -379,12 +363,10 @@ var ChatClient = function() {
 				roomName : roomName
 			}
 		}).done(function(data){
-			console.log("getBlackUserList done");
 			if(callback){
 				callback(data);			
 			}
 		}).fail(function(data) {
-			console.log("실패");
 		});
 	};
 	
