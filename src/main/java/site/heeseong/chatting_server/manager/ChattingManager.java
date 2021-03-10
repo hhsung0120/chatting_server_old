@@ -48,12 +48,12 @@ public class ChattingManager {
 		//채팅 방을 만들어주는 로직
 		//프로그램 idx 유니크 키
 		ChattingRoomManager chattingRoomManager = chattingRooms.get(chattingRoom.getProgramIdx());
-		//채팅 룸이 존재 하지 않는다면 새로 생성 해야함
+		//채팅 방이 존재 하지 않는다면 새로 생성
 		if (chattingRoomManager == null) {
 			chattingRoomManager = createChattingRoom(chattingRoom, true);
 		}
 
-		if (chattingRoomManager.addUser(chattingUser.getUser()) == -1) {
+		if (chattingRoomManager.addUser(chattingUser.getUsers()) == -1) {
 			throw new UserExistException();
 		}
 
@@ -100,7 +100,7 @@ public class ChattingManager {
 
 		if (log) {
 			Event event = EventManager.makeCreateRoomEvent(chattingRoom);
-			//		sendEvent(internalIdx, event);
+			//sendEvent(internalIdx, event);
 			chattingMapper.insertEvent(event);
 		}
 

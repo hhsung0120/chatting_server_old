@@ -25,14 +25,6 @@ public class ChattingUser {
 		latestMessageTime = System.currentTimeMillis();
 	}
 
-	public Users getUser() {
-		return users;
-	}
-
-	public void setUser(Users user) {
-		this.users = user;
-	}
-
 	public long getUserIdx() {
 		return users.getUserIdx();
 	}
@@ -85,7 +77,7 @@ public class ChattingUser {
 	}
 	
 	@JsonIgnore
-	public ArrayList<Event> getEvents() throws Exception {
+	public ArrayList<Event> getEvents() {
 		setLatestTime();
 		ArrayList<Event> events = new ArrayList<Event>();
 		if (messageQueue != null) {
@@ -100,7 +92,6 @@ public class ChattingUser {
 					}
 				}
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

@@ -16,13 +16,13 @@ import java.util.ArrayList;
 @Service
 public class ChattingService {
 
-	final private ChattingMapper chattingMapper;
 	final private ChattingManager chattingManagerService;
+	final private ChattingMapper chattingMapper;
 
 	@Autowired
-	private ChattingService(ChattingMapper chattingMapper, ChattingManager chattingManagerService){
-		this.chattingMapper = chattingMapper;
+	private ChattingService(ChattingManager chattingManagerService, ChattingMapper chattingMapper){
 		this.chattingManagerService = chattingManagerService;
+		this.chattingMapper = chattingMapper;
 	}
 
 	public EnterRoomResult enterChatRoom(ChattingRoom chattingRoom, Users users) throws Exception {
@@ -32,7 +32,8 @@ public class ChattingService {
 				EventType.ENTER_USER.getValue()
 				, enterRoomResult.getProgramIdx()
 				, users.getUserIdx()
-				, -1, users.getUserId()
+				, -1
+				, users.getUserId()
 				, users.getUserName()
 				, enterRoomResult.getName() + "_" + enterRoomResult.getDescription(), "");
 
