@@ -281,9 +281,6 @@ public class ChattingManager {
 				sendEvent(internalIdx, event);
 				chattingMapper.insertEvent(event);
 			}
-			
-			//saveUsers();
-			//saveRooms();
 		}
 		else {
 			throw new BadArgumentException();
@@ -507,7 +504,10 @@ public class ChattingManager {
 			sendMessage(internalIdx, event);
 		}else if(event.getType() == EventType.ENTER_USER.getValue()){
 			sendEventToRoom(internalIdx, event, false);
+		}else if(event.getType() == EventType.LEAVE_USER.getValue()){
+			sendEventToRoom(internalIdx, event, false);
 		}
+
 		/*switch (event.getType()) {
 		case EventType.NORMAL_MSG:
 			sendMessage(internalIdx, event);

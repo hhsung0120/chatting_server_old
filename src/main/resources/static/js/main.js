@@ -231,7 +231,8 @@ var processEvents = function(events) {
 					console.log('ENTER_USER')
 					break;
 				case eventType.LEAVE_USER:
-					$('#USER_'+ event.fromUserIdx).remove();
+					//기존 소스는 event.fromUserIdx 인데 event 안에 데이터가 저렇게 들어있음
+					$('#USER_'+ event.from_userIdx).remove();
 					console.log('LEAVE_USER')
 					break;
 				case eventType.REQ_APPROVAL_MSG:

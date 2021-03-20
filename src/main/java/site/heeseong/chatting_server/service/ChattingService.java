@@ -57,33 +57,34 @@ public class ChattingService {
 	public ArrayList<Users> listUsers(int roomIdx){
 		return chattingManagerService.getUserList(roomIdx);
 	}
-/*
+
 	
 	public void leaveChatRoom(int programIdx, int userIdx, long internalIdx) throws Exception {
-		chatManager.leaveChatRoom(internalIdx, programIdx, null);
+		chattingManagerService.leaveChatRoom(internalIdx, programIdx, null);
 
-		Event roomEvent = new Event(EventType.LEAVE_USER, programIdx, userIdx, -1, "", "", "","");
+		Event roomEvent = new Event(EventType.LEAVE_USER.getValue(), programIdx, userIdx, -1, "", "", "","");
 		chattingMapper.insertEvent(roomEvent);
 	}
-	
-	public Integer[] getBlackList(long internalIdx, int roomIdx) throws Exception {
-		return chatManager.getBlackList(internalIdx, roomIdx);
-	}
-	
-	public void addBlackList(long internalIdx, int userIdx, int programIdx, int blackUser) throws Exception {
-		chatManager.addBlackList(internalIdx, programIdx, blackUser);
 
-		Event roomEvent = new Event(EventType.ADD_BLACKLIST, programIdx, userIdx, blackUser, "", "", "","");
-		chattingMapper.insertEvent(roomEvent);
-	}
-	
-	public void removeBlackList(long internalIdx, int userIdx, int programIdx, int blackUser) throws Exception {
-		chatManager.removeBlackList(internalIdx, programIdx, blackUser);
+	/*
+        public Integer[] getBlackList(long internalIdx, int roomIdx) throws Exception {
+            return chatManager.getBlackList(internalIdx, roomIdx);
+        }
 
-		Event roomEvent = new Event(EventType.REMOVE_BLACKLIST, programIdx, userIdx, blackUser, "", "", "","");
-		chattingMapper.insertEvent(roomEvent);
-	}
-	*/
+        public void addBlackList(long internalIdx, int userIdx, int programIdx, int blackUser) throws Exception {
+            chatManager.addBlackList(internalIdx, programIdx, blackUser);
+
+            Event roomEvent = new Event(EventType.ADD_BLACKLIST, programIdx, userIdx, blackUser, "", "", "","");
+            chattingMapper.insertEvent(roomEvent);
+        }
+
+        public void removeBlackList(long internalIdx, int userIdx, int programIdx, int blackUser) throws Exception {
+            chatManager.removeBlackList(internalIdx, programIdx, blackUser);
+
+            Event roomEvent = new Event(EventType.REMOVE_BLACKLIST, programIdx, userIdx, blackUser, "", "", "","");
+            chattingMapper.insertEvent(roomEvent);
+        }
+        */
 	public Event sendEvent(long internalIdx, Event chatDTO) throws Exception{
 		System.out.println(chatDTO);
 		Event e = new Event();

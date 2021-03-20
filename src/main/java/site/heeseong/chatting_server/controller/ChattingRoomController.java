@@ -45,7 +45,15 @@ public class ChattingRoomController {
 
 	@RequestMapping(value="/users", method=RequestMethod.GET)
 	public ArrayList<Users> listUsers(@RequestParam("programIdx") int programIdx){
-		System.out.println("호출되나 ?");
 		return chattingService.listUsers(programIdx);
+	}
+
+	@RequestMapping(value="/user", method=RequestMethod.DELETE)
+	public void leaveChatRoom(
+			@RequestHeader("internalIdx") long internalIdx,
+			@RequestHeader("programIdx") int programIdx,
+			@RequestHeader("userIdx") int userIdx) throws Exception {
+		log.debug("leave chatRoom");
+		chattingService.leaveChatRoom(programIdx, userIdx, internalIdx);
 	}
 }

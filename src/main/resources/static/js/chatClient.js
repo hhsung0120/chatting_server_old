@@ -72,7 +72,7 @@ var ChatClient = function() {
 		if (userInfo.programIdx !== -1) {
 			$.ajax({
 				method: "DELETE",
-				url: '/chatRoom/user',
+				url: '/chattingRoom/user',
 				contentType:'application/json; charset=UTF-8',
 				async: async,
 				headers: userInfo
