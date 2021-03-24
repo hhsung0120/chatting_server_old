@@ -24,11 +24,11 @@ public class ChattingRoomController {
 
 	@PostMapping(value="/enterUser")
 	public EnterRoomResult enterChatRoom(
-			@RequestHeader("userIdx") long userIdx,
-			@RequestHeader("userId") String userId,
-			@RequestHeader("userName") String userName,
-			@RequestHeader("isAdmin") boolean isAdmin,
-			@RequestBody ChattingRoom chattingRoom) throws Exception {
+			@RequestHeader("userIdx") long userIdx
+			, @RequestHeader("userId") String userId
+			, @RequestHeader("userName") String userName
+			, @RequestHeader("isAdmin") boolean isAdmin
+			, @RequestBody ChattingRoom chattingRoom) throws Exception {
 
 		//chattingRoom 에 뭐 담겨 오는지 체크하고 나중에 세션으로 처리
 		chattingRoom.setUserIdx(userIdx);
@@ -44,16 +44,20 @@ public class ChattingRoomController {
 	}
 
 	@RequestMapping(value="/users", method=RequestMethod.GET)
-	public ArrayList<Users> listUsers(@RequestParam("programIdx") int programIdx){
+	public ArrayList<Users> listUsers(
+			@RequestParam("programIdx") int programIdx){
 		return chattingService.listUsers(programIdx);
 	}
 
 	@RequestMapping(value="/user", method=RequestMethod.DELETE)
 	public void leaveChatRoom(
-			@RequestHeader("internalIdx") long internalIdx,
-			@RequestHeader("programIdx") int programIdx,
-			@RequestHeader("userIdx") int userIdx) throws Exception {
+			@RequestHeader("internalIdx") long internalIdx
+			, @RequestHeader("programIdx") int programIdx
+			, @RequestHeader("userIdx") int userIdx) throws Exception {
 		log.debug("leave chatRoom");
 		chattingService.leaveChatRoom(programIdx, userIdx, internalIdx);
 	}
+
+
+
 }
