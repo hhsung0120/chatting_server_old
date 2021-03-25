@@ -72,7 +72,6 @@ function leaveChatRoom(){
 }
 
 var addUserToUserList = function(userIdx, userId, userName) {
-	console.log("addUserToUserList");
 	var newUser = $('<li>', {
 		'class': 'list-group-item col-lg-12',
 		'id' : 'USER_' +  userIdx,
@@ -87,9 +86,7 @@ var addUserToUserList = function(userIdx, userId, userName) {
 	newUser.append(newUserDiv);
 
 	if (ChatClient.getUserIdx() !== userIdx) {
-
 		newUserDiv.addClass('otheruser');
-
 		newUserDiv.click(function(e) {
 			var userId = $(e.target).attr('data-user');
 			$('#directmsg-user').attr('data-useridx', userIdx);
@@ -120,13 +117,8 @@ var addUserToUserList = function(userIdx, userId, userName) {
 
 			newUser.append(spanBlock);
 		}
-	}else{
-		console.log("못그림")
 	}
-
-	console.log(newUser);
 	$('#user-list').append(newUser);
-
 };
 
 var getUserList = function() {
@@ -168,6 +160,7 @@ var exitChatRoom = function(aync) {
 var processEvents = function(events) {
 	if (events && events.length > 0) {
 		events.forEach (function(event) {
+			console.log(event.type);
 			switch(event.type) {
 				case eventType.NORMAL_MSG:
 					//관리자 화면 admin 일때 자기 자신 아이콘 안보임 (웹적용)
@@ -181,8 +174,8 @@ var processEvents = function(events) {
 							'<div class="fr"></div></div><div class="cont"><span class="bg_top"></span><p class="txt">'+event.message+'</p>'+
 							'<span class="bg_bottom"></span></div></li>');
 					}else if(event.fromUserIdx!=userInfo.userMessageIdx && event.name != 'admin'){
-						$('#chat-messages').append('<li class="me"><p class="name"><div class="clear">'+event.name+'<a href="#"><img src="/img/admin/ico_caution.png" alt="" /></a>'
-							+'<div class="fr"><a href="#"><img src="/img/admin/ico_t2.png" alt="" /></a><a href="#"><img src="/img/admin/ico_t3.png" alt="" /></a>'+
+						$('#chat-messages').append('<li class="me"><p class="name"><div class="clear">'+event.name
+							+'<div class="fr">'+
 							'</div></div></p><div class="cont"><span class="bg_top"></span><p class="txt">'+event.message+'</p><span class="bg_bottom"></span>'+
 							'</div></li>');
 					}

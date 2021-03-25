@@ -16,19 +16,10 @@ var ChatClient = function() {
 	}
 
 	var toUserId = '';
-	
-	var getUserInfo = function() {
-		return userInfo;		
-	};
-	
+
 	var getUserIdx = function() {
 		return userInfo.userIdx;
 	};
-	
-
-	var setUserId = function(userId){
-		toUserId = userId;
-	}
 
 	var enterChatRoom = function(programIdx, adminIdx, name, description, type, callback) {
 		if (!userInfo || userInfo.programIdx === -1) {
@@ -373,7 +364,6 @@ var ChatClient = function() {
 	return {
 		getUserIdx: getUserIdx,
 		setUserInfo: setUserInfo,
-		setUserId : setUserId,
 		enterChatRoom: enterChatRoom,
 		exitChatRoom: exitChatRoom,
 		updateChatRoom: updateChatRoom,

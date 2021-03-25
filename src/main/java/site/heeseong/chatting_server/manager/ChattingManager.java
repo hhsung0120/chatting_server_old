@@ -439,18 +439,15 @@ public class ChattingManager {
 				sendEventToRoom(internalIdx, event);
 			}else if(room.getType() == RoomType.ONE_TO_MANY.getValue()){
 				user = chattingUsers.get(internalIdx);
-				if (user != null && user.isAdmin() == true) {
-					// admin user : send to all user
+				if (user != null && user.isAdmin()) {
 					sendEventToRoom(internalIdx, event);
-				}
-				else {
-					// normal user : send to admin
+				}else {
 					sendEventToPerson(room.getProgramIdx(), room.getAdminIdx(), event);
 					sendEventToPerson(room.getProgramIdx(), event.getFrom_userIdx(), event);
 				}
 			}else if(room.getType() == RoomType.APPROVAL.getValue()){
 				user = chattingUsers.get(internalIdx);
-				if (user != null && user.isAdmin() == true) {
+				if (user != null && user.isAdmin()) {
 					// admin user : without approval
 					sendEventToRoom(internalIdx, event);
 				} else {
@@ -506,6 +503,9 @@ public class ChattingManager {
 			sendEventToRoom(internalIdx, event, false);
 		}else if(event.getType() == EventType.LEAVE_USER.getValue()){
 			sendEventToRoom(internalIdx, event, false);
+		}else if(event.getType() == EventType.DIRECT_MSG.getValue()){
+			sendEventToPerson(event.getProgramIdx(), event.getTo_userIdx(), event);
+			sendEventToPerson(internalIdx, event);
 		}
 
 		/*switch (event.getType()) {

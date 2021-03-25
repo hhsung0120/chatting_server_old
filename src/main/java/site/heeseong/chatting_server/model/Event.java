@@ -10,6 +10,8 @@ public class Event {
 	private String name;
 	private String to_userId;
 	private long from_userIdx;
+	private long from_user_idx;
+	private long fromUserIdx;
 	private long to_userIdx;
 	private String message;
 	private String regidate;

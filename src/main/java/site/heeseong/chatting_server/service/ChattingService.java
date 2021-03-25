@@ -86,17 +86,15 @@ public class ChattingService {
         }
         */
 	public Event sendEvent(long internalIdx, Event chatDTO) throws Exception{
-		System.out.println(chatDTO);
 		Event e = new Event();
-		String enen = chatDTO.getMessage();
 		e.setType(chatDTO.getType());
 		e.setProgramIdx(chatDTO.getProgramIdx());
-		e.setFrom_userIdx(chatDTO.getFrom_userIdx());
+		e.setFrom_userIdx(chatDTO.getFromUserIdx());
 		e.setTo_userIdx(chatDTO.getTo_userIdx());
 		e.setTo_userId(chatDTO.getTo_userId());
 		e.setUserId(chatDTO.getUserId());
 		e.setName(chatDTO.getName());
-		e.setMessage(enen);
+		e.setMessage(chatDTO.getMessage());
 
 		chattingMapper.insertEvent(e);
 		chatDTO.setIdx(e.getIdx());
