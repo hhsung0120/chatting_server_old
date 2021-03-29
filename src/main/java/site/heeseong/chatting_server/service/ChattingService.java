@@ -86,20 +86,9 @@ public class ChattingService {
         }
         */
 	public Event sendEvent(long internalIdx, Event chatDTO) throws Exception{
-		Event e = new Event();
-		e.setType(chatDTO.getType());
-		e.setProgramIdx(chatDTO.getProgramIdx());
-		e.setFrom_userIdx(chatDTO.getFromUserIdx());
-		e.setTo_userIdx(chatDTO.getTo_userIdx());
-		e.setTo_userId(chatDTO.getTo_userId());
-		e.setUserId(chatDTO.getUserId());
-		e.setName(chatDTO.getName());
-		e.setMessage(chatDTO.getMessage());
-
-		chattingMapper.insertEvent(e);
-		chatDTO.setIdx(e.getIdx());
+		chattingMapper.insertEvent(chatDTO);
+		chatDTO.setIdx(chatDTO.getIdx());
 		chattingManagerService.sendEvent(internalIdx, chatDTO);
-
 		//TODO: 이거 왜 하는지 나중에 분석
 		//chattingMapper.insertMessageTypeUpdate(chatDTO);
 		

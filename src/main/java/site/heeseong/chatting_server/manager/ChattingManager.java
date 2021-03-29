@@ -397,6 +397,7 @@ public class ChattingManager {
 		ChattingUser user = chattingUsers.get(internalIdx);
 		if (user != null) {
 			try {
+				//메시지 보내는 구간
 				user.postMessage(event);
 			} catch (Exception e) {
 				if (user.checkTimeout()) {
@@ -429,7 +430,7 @@ public class ChattingManager {
 		if (room != null) { 
 			ChattingUser user;
 			
-			if (room.isBlackList(event.getFrom_userIdx())) {
+			if (room.isBlackList(event.getFromUserIdx())) {
 				event.setType(EventType.BLOCKED_MSG.getValue());
 				sendEventToPerson(internalIdx, event);
 				return;
@@ -443,7 +444,7 @@ public class ChattingManager {
 					sendEventToRoom(internalIdx, event);
 				}else {
 					sendEventToPerson(room.getProgramIdx(), room.getAdminIdx(), event);
-					sendEventToPerson(room.getProgramIdx(), event.getFrom_userIdx(), event);
+					sendEventToPerson(room.getProgramIdx(), event.getFromUserIdx(), event);
 				}
 			}else if(room.getType() == RoomType.APPROVAL.getValue()){
 				user = chattingUsers.get(internalIdx);
@@ -456,7 +457,7 @@ public class ChattingManager {
 					sendEventToPerson(room.getProgramIdx(), room.getAdminIdx(), event);
 					Event waitEvent = EventManager.cloneEvent(event);
 					waitEvent.setType(EventType.WAIT_APPROVAL_MSG.getValue());
-					sendEventToPerson(waitEvent.getProgramIdx(), waitEvent.getFrom_userIdx(), waitEvent);
+					sendEventToPerson(waitEvent.getProgramIdx(), waitEvent.getFromUserIdx(), waitEvent);
 				}
 			}
 			/*switch(room.getType()) {
@@ -472,7 +473,7 @@ public class ChattingManager {
 				else {
 					// normal user : send to admin
 					sendEventToPerson(room.getProgramIdx(), room.getAdminIdx(), event);
-					sendEventToPerson(room.getProgramIdx(), event.getFrom_userIdx(), event);
+					sendEventToPerson(room.getProgramIdx(), event.getFromUserIdx(), event);
 				}
 				break;
 			case RoomType.APPROVAL :
@@ -486,7 +487,7 @@ public class ChattingManager {
 					sendEventToPerson(room.getProgramIdx(), room.getAdminIdx(), event);
 					Event waitEvent = EventManager.cloneEvent(event);
 					waitEvent.setType(EventType.WAIT_APPROVAL_MSG.getValue());
-					sendEventToPerson(waitEvent.getProgramIdx(), waitEvent.getFrom_userIdx(), waitEvent);
+					sendEventToPerson(waitEvent.getProgramIdx(), waitEvent.getFromUserIdx(), waitEvent);
 				}
 				break;
 			}*/
@@ -497,6 +498,7 @@ public class ChattingManager {
 
 	public void sendEvent(long internalIdx, Event event) throws Exception {
 
+		System.out.println("내가 보낸 것 : " + event.toString());
 		if(event.getType() == EventType.NORMAL_MSG.getValue()) {
 			sendMessage(internalIdx, event);
 		}else if(event.getType() == EventType.ENTER_USER.getValue()){
@@ -521,14 +523,14 @@ public class ChattingManager {
 			break;
 		case EventType.APPROVED_MSG: 
 			log.debug("APPROVED_MSG");
-			sendEventToPerson(event.getProgramIdx(), event.getFrom_userIdx(), event);
+			sendEventToPerson(event.getProgramIdx(), event.getFromUserIdx(), event);
 			Event newEvent = EventManager.cloneEvent(event);
 			newEvent.setType(EventType.NORMAL_MSG);
 			sendEventToRoom(internalIdx, newEvent);
 			break;
 		case EventType.REJECTED_MSG:
 			log.debug("REJECTED_MSG");
-			sendEventToPerson(event.getProgramIdx(), event.getFrom_userIdx(), event);
+			sendEventToPerson(event.getProgramIdx(), event.getFromUserIdx(), event);
 			break;
 		case EventType.CREATE_CHATROOM:
 			sendEventToAll(internalIdx, event);
