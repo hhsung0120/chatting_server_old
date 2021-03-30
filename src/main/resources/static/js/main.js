@@ -80,15 +80,17 @@ var addUserToUserList = function(userIdx, userId, userName) {
 	var newUserDiv = $('<div>', {
 		'class': 'col-lg-12',
 		'data-user': userId,
+		'data-userIdx' : userIdx,
 		'style' : 'padding:0px;'
 	}).html(userId + '(' + userName + ')');
 
 	newUser.append(newUserDiv);
 
 	if (ChatClient.getUserIdx() !== userIdx) {
+		console.log("들어와유?");
 		newUserDiv.addClass('otheruser');
 		newUserDiv.click(function(e) {
-			var userId = $(e.target).attr('data-user');
+			console.log($(this).attr('data-userIdx'))
 			$('#directmsg-user').attr('data-useridx', userIdx);
 			$('#input-direct-message-dialog').modal();
 		});
@@ -160,7 +162,6 @@ var exitChatRoom = function(aync) {
 var processEvents = function(events) {
 	if (events && events.length > 0) {
 		events.forEach (function(event) {
-			console.log(event.type);
 			switch(event.type) {
 				case eventType.NORMAL_MSG:
 					//관리자 화면 admin 일때 자기 자신 아이콘 안보임 (웹적용)

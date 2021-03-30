@@ -184,19 +184,19 @@ var ChatClient = function() {
 		});			
 	};
 	
-	var sendAdminMessage = function(msg, callback) {
+	var sendAdminMessage = function(message, callback) {
 		var sendData = {
 				programIdx: userInfo.programIdx,
 				fromUserIdx: userInfo.userIdx,
 				userId: userInfo.userId,
 				name: userInfo.userName,
-				msg: msg,
+				message: message,
 				type: eventType.ADMIN_MSG
 			};
 		
 			$.ajax({
 				method: "POST",
-				url: '/event',
+				url: '/chattingRoom/event',
 				contentType:'application/json; charset=UTF-8',
 				headers: userInfo,
 				data: JSON.stringify(sendData)
@@ -207,7 +207,7 @@ var ChatClient = function() {
 			});		
 	};
 	
-	var sendDirectMessage = function(toUserIdx, msg, callback) {
+	var sendDirectMessage = function(toUserIdx, message, callback) {
 		
 		var sendData = {
 			programIdx: userInfo.programIdx,
@@ -216,12 +216,12 @@ var ChatClient = function() {
 			name: userInfo.userName,
 			toUserIdx : toUserIdx,
 			to_UserId : toUserId,
-			msg: msg,
+			message: message,
 			type: eventType.DIRECT_MSG
 		};
 		$.ajax({
 			method: "POST",
-			url: '/event',
+			url: '/chattingRoom/event',
 			contentType:'application/json; charset=UTF-8',
 			headers: userInfo,
 			data: JSON.stringify(sendData)
@@ -283,18 +283,18 @@ var ChatClient = function() {
 		});			
 	};
 	
-	var approveMessage = function(orgUserIdx, orgUserId, orgUserName, msg, callback) {
+	var approveMessage = function(orgUserIdx, orgUserId, orgUserName, message, callback) {
 		var sendData = {
 			programIdx: userInfo.programIdx,
 			fromUserIdx: orgUserIdx,
 			userId: orgUserId,
 			name: orgUserName,
-			msg: msg,
+			message: message,
 			type: eventType.APPROVED_MSG
 		};
 		$.ajax({
 			method: "POST",
-			url: '/event',
+			url: '/chattingRoom/event',
 			contentType:'application/json; charset=UTF-8',
 			headers: userInfo,
 			data: JSON.stringify(sendData)
@@ -305,19 +305,19 @@ var ChatClient = function() {
 		});			
 	};
 	
-	var rejectMessage = function(orgUserIdx, orgUserId, orgUserName, msg, callback) {
+	var rejectMessage = function(orgUserIdx, orgUserId, orgUserName, message, callback) {
 		var sendData = {
 			programIdx: userInfo.programIdx,
 			fromUserIdx: orgUserIdx,
 			userId: orgUserId,
 			name: orgUserName,
-			msg: msg,
+			message: message,
 			type: eventType.REJECTED_MSG
 		};
 		
 		$.ajax({
 			method: "POST",
-			url: '/event',
+			url: '/chattingRoom/event',
 			contentType:'application/json; charset=UTF-8',
 			headers: userInfo,
 			data: JSON.stringify(sendData)

@@ -23,6 +23,7 @@ public class Event {
 		this.type = type;
 		this.programIdx = programIdx;
 		this.from_userIdx = fromUserIdx;
+		this.fromUserIdx = fromUserIdx;
 		this.to_userIdx = toUserIdx;
 		this.userId = id;
 		this.name = name;

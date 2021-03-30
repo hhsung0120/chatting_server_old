@@ -505,15 +505,20 @@ public class ChattingManager {
 			sendEventToRoom(internalIdx, event, false);
 		}else if(event.getType() == EventType.LEAVE_USER.getValue()){
 			sendEventToRoom(internalIdx, event, false);
+		}else if(event.getType() == EventType.APPROVED_MSG.getValue()){
+			sendEventToPerson(event.getProgramIdx(), event.getFromUserIdx(), event);
+			Event newEvent = EventManager.cloneEvent(event);
+			newEvent.setType(EventType.NORMAL_MSG.getValue());
+			sendEventToRoom(internalIdx, newEvent);
+		}else if(event.getType() == EventType.REJECTED_MSG.getValue()){
+			sendEventToPerson(event.getProgramIdx(), event.getFromUserIdx(), event);
 		}else if(event.getType() == EventType.DIRECT_MSG.getValue()){
 			sendEventToPerson(event.getProgramIdx(), event.getTo_userIdx(), event);
 			sendEventToPerson(internalIdx, event);
 		}
 
 		/*switch (event.getType()) {
-		case EventType.NORMAL_MSG:
-			sendMessage(internalIdx, event);
-			break;
+
 		case EventType.DIRECT_MSG:
 			sendEventToPerson(event.getProgramIdx(), event.getTo_userIdx(), event);
 			sendEventToPerson(internalIdx, event);
@@ -521,28 +526,11 @@ public class ChattingManager {
 		case EventType.ADMIN_MSG:
 			sendEventToRoom(internalIdx, event, true);
 			break;
-		case EventType.APPROVED_MSG: 
-			log.debug("APPROVED_MSG");
-			sendEventToPerson(event.getProgramIdx(), event.getFromUserIdx(), event);
-			Event newEvent = EventManager.cloneEvent(event);
-			newEvent.setType(EventType.NORMAL_MSG);
-			sendEventToRoom(internalIdx, newEvent);
-			break;
-		case EventType.REJECTED_MSG:
-			log.debug("REJECTED_MSG");
-			sendEventToPerson(event.getProgramIdx(), event.getFromUserIdx(), event);
-			break;
 		case EventType.CREATE_CHATROOM:
 			sendEventToAll(internalIdx, event);
 			break;
 		case EventType.REMOVE_CHATROOM:
 			sendEventToAll(internalIdx, event);
-			break;
-		case EventType.ENTER_USER:
-			sendEventToRoom(internalIdx, event, false);
-			break;
-		case EventType.LEAVE_USER:
-			sendEventToRoom(internalIdx, event, false);
 			break;
 		case EventType.UPDATE_CHATROOM:
 			sendEventToRoom(internalIdx, event, false);
