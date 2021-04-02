@@ -39,6 +39,7 @@ public class EventManager {
 		event.setType(EventType.ENTER_USER.getValue());
 		event.setProgramIdx(roomIdx);
 		event.setFrom_userIdx((int)chatroomUser.getUserIdx());
+		event.setFromUserIdx((int)chatroomUser.getUserIdx());
 		event.setUserId(chatroomUser.getUserId());
 		event.setName(chatroomUser.getUserName());
 		

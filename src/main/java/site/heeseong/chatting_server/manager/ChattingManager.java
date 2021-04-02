@@ -66,9 +66,6 @@ public class ChattingManager {
 
 		EnterRoomResult newResult = new EnterRoomResult(chattingUser.getInternalIdx(), chattingRoomManager.getChattingRoomData());
 
-		log.info("enter chatting user : " + chattingUsers);
-		log.info("enter chatting room : " + chattingRooms);
-
 		return newResult;
 	}
 
@@ -497,8 +494,7 @@ public class ChattingManager {
 	}
 
 	public void sendEvent(long internalIdx, Event event) throws Exception {
-
-		System.out.println("내가 보낸 것 : " + event.toString());
+		System.out.println(event.toString());
 		if(event.getType() == EventType.NORMAL_MSG.getValue()) {
 			sendMessage(internalIdx, event);
 		}else if(event.getType() == EventType.ENTER_USER.getValue()){
@@ -513,7 +509,7 @@ public class ChattingManager {
 		}else if(event.getType() == EventType.REJECTED_MSG.getValue()){
 			sendEventToPerson(event.getProgramIdx(), event.getFromUserIdx(), event);
 		}else if(event.getType() == EventType.DIRECT_MSG.getValue()){
-			sendEventToPerson(event.getProgramIdx(), event.getTo_userIdx(), event);
+			sendEventToPerson(event.getProgramIdx(), event.getToUserIdx(), event);
 			sendEventToPerson(internalIdx, event);
 		}
 

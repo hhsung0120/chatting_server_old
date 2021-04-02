@@ -87,7 +87,6 @@ var addUserToUserList = function(userIdx, userId, userName) {
 	newUser.append(newUserDiv);
 
 	if (ChatClient.getUserIdx() !== userIdx) {
-		console.log("들어와유?");
 		newUserDiv.addClass('otheruser');
 		newUserDiv.click(function(e) {
 			console.log($(this).attr('data-userIdx'))

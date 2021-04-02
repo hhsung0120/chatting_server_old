@@ -1,11 +1,12 @@
 var ChatClient = function() {
 	var userInfo = {
-		internalIdx : -1,
-		programIdx: -1,
-		userIdx : -1,
-		userId : '',
-		userName : '',
-		isAdmin : false
+		internalIdx : -1
+		, programIdx: -1
+		, userIdx : -1
+		, userId : ''
+		, userName : ''
+		, fromUserIdx : 0
+		, isAdmin : false
 	};
 
 	var setUserInfo = function(userIdx, userId, userName, isAdmin) {

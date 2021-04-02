@@ -13,6 +13,7 @@ public class Event {
 	private long from_user_idx;
 	private long fromUserIdx;
 	private long to_userIdx;
+	private long toUserIdx;
 	private String message;
 	private String regidate;
 	private int idx;

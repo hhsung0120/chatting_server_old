@@ -40,8 +40,6 @@ public class ChattingRoomController {
 		//이부분은 전부가 세션으로 처리 가능
 		Users users = new Users(chattingRoom.getUserIdx(), chattingRoom.getUserId(), chattingRoom.getUserName(), chattingRoom.isAdmin());
 
-		System.out.println(chattingRoom.toString());
-		System.out.println(users.toString());
 		return chattingService.enterChatRoom(chattingRoom, users);
 	}
 
