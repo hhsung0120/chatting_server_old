@@ -511,17 +511,11 @@ public class ChattingManager {
 		}else if(event.getType() == EventType.DIRECT_MSG.getValue()){
 			sendEventToPerson(event.getProgramIdx(), event.getToUserIdx(), event);
 			sendEventToPerson(internalIdx, event);
+		}else if(event.getType() == EventType.ADMIN_MSG.getValue()){
+			sendEventToRoom(internalIdx, event, true);
 		}
 
 		/*switch (event.getType()) {
-
-		case EventType.DIRECT_MSG:
-			sendEventToPerson(event.getProgramIdx(), event.getTo_userIdx(), event);
-			sendEventToPerson(internalIdx, event);
-			break;
-		case EventType.ADMIN_MSG:
-			sendEventToRoom(internalIdx, event, true);
-			break;
 		case EventType.CREATE_CHATROOM:
 			sendEventToAll(internalIdx, event);
 			break;

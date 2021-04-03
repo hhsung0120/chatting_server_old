@@ -58,6 +58,33 @@ public class ChattingRoomController {
 		chattingService.leaveChatRoom(programIdx, userIdx, internalIdx);
 	}
 
+	@RequestMapping(value="/blacklist", method=RequestMethod.GET)
+	public Integer[] getBlackList(
+			@RequestHeader("internalIdx") long internalIdx,
+			@RequestHeader("programIdx") int programIdx,
+			@RequestHeader("admin") boolean admin) throws Exception {
+		return chatService.getBlackList(internalIdx, programIdx);
+	}
+
+	@RequestMapping(value="/blacklist", method=RequestMethod.POST)
+	public void addBlackList(
+			@RequestHeader("internalIdx") long internalIdx,
+			@RequestHeader("programIdx") int programIdx,
+			@RequestHeader("userIdx") int userIdx,
+			@RequestHeader("admin") boolean admin,
+			@RequestBody UserRoomMapperDTO blackUser) throws Exception {
+		chatService.addBlackList(internalIdx, userIdx, programIdx, blackUser.getUserIdx());
+	}
+
+	@RequestMapping(value="/blacklist", method=RequestMethod.DELETE)
+	public void removeBlackList(
+			@RequestHeader("internalIdx") long internalIdx,
+			@RequestHeader("programIdx") int programIdx,
+			@RequestHeader("userIdx") int userIdx,
+			@RequestHeader("admin") boolean admin,
+			@RequestBody UserRoomMapperDTO blackUser) throws Exception {
+		chatService.removeBlackList(internalIdx, userIdx, programIdx, blackUser.getUserIdx());
+	}
 
 
 }

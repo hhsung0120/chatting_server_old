@@ -241,7 +241,7 @@ var ChatClient = function() {
 	
 		$.ajax({
 			method: "POST",
-			url: '/chatRoom/blacklist',
+			url: '/chattingRoom/blacklist',
 			contentType:'application/json; charset=UTF-8',
 			headers: userInfo,
 			data: JSON.stringify(sendData)
