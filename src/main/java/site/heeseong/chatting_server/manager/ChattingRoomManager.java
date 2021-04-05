@@ -16,7 +16,7 @@ public class ChattingRoomManager {
 	private ChattingRoom chattingRoomData;
 	private ConcurrentHashMap<Long, Users> users;
 	private Object userLock = new Object();
-	private HashSet<Integer> blackList = new HashSet<Integer>();
+	private HashSet<Long> blackList = new HashSet<Long>();
 	private Object blackLock = new Object();
 
 	@JsonIgnore
@@ -131,7 +131,7 @@ public class ChattingRoomManager {
 		return 0;
 	}
 	
-	public void addBlackList(int userIdx) {
+	public void addBlackList(long userIdx) {
 		synchronized(blackLock) {
 			blackList.add(userIdx);
 		}
@@ -141,16 +141,16 @@ public class ChattingRoomManager {
 		return blackList.contains(userIdx);
 	}
 
-	public HashSet<Integer> getBlackList() {
+	public HashSet<Long> getBlackList() {
 		return blackList;
 	}
 
 	@JsonIgnore
-	public Integer[] getBlackListArray() {
-		return (Integer[])blackList.toArray();
+	public Long[] getBlackListArray() {
+		return (Long[])blackList.toArray();
 	}
 	
-	public void removeBlackList(int userIdx) {
+	public void removeBlackList(long userIdx) {
 		synchronized(blackLock) {
 			blackList.remove(userIdx);
 		}

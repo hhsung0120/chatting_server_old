@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import site.heeseong.chatting_server.model.ChattingRoom;
 import site.heeseong.chatting_server.model.EnterRoomResult;
+import site.heeseong.chatting_server.model.UserRoomMapperDTO;
 import site.heeseong.chatting_server.model.Users;
 import site.heeseong.chatting_server.service.ChattingService;
 
@@ -59,11 +60,10 @@ public class ChattingRoomController {
 	}
 
 	@RequestMapping(value="/blacklist", method=RequestMethod.GET)
-	public Integer[] getBlackList(
+	public Long[] getBlackList(
 			@RequestHeader("internalIdx") long internalIdx,
-			@RequestHeader("programIdx") int programIdx,
-			@RequestHeader("admin") boolean admin) throws Exception {
-		return chatService.getBlackList(internalIdx, programIdx);
+			@RequestHeader("programIdx") int programIdx) throws Exception {
+		return chattingService.getBlackList(internalIdx, programIdx);
 	}
 
 	@RequestMapping(value="/blacklist", method=RequestMethod.POST)
@@ -71,9 +71,8 @@ public class ChattingRoomController {
 			@RequestHeader("internalIdx") long internalIdx,
 			@RequestHeader("programIdx") int programIdx,
 			@RequestHeader("userIdx") int userIdx,
-			@RequestHeader("admin") boolean admin,
 			@RequestBody UserRoomMapperDTO blackUser) throws Exception {
-		chatService.addBlackList(internalIdx, userIdx, programIdx, blackUser.getUserIdx());
+		chattingService.addBlackList(internalIdx, userIdx, programIdx, blackUser.getUserIdx());
 	}
 
 	@RequestMapping(value="/blacklist", method=RequestMethod.DELETE)
@@ -81,9 +80,8 @@ public class ChattingRoomController {
 			@RequestHeader("internalIdx") long internalIdx,
 			@RequestHeader("programIdx") int programIdx,
 			@RequestHeader("userIdx") int userIdx,
-			@RequestHeader("admin") boolean admin,
 			@RequestBody UserRoomMapperDTO blackUser) throws Exception {
-		chatService.removeBlackList(internalIdx, userIdx, programIdx, blackUser.getUserIdx());
+		chattingService.removeBlackList(internalIdx, userIdx, programIdx, blackUser.getUserIdx());
 	}
 
 

@@ -66,25 +66,26 @@ public class ChattingService {
 		chattingMapper.insertEvent(roomEvent);
 	}
 
-	/*
-        public Integer[] getBlackList(long internalIdx, int roomIdx) throws Exception {
-            return chatManager.getBlackList(internalIdx, roomIdx);
-        }
 
-        public void addBlackList(long internalIdx, int userIdx, int programIdx, int blackUser) throws Exception {
-            chatManager.addBlackList(internalIdx, programIdx, blackUser);
+	public Long[] getBlackList(long internalIdx, int roomIdx) throws Exception {
+		return chattingManagerService.getBlackList(internalIdx, roomIdx);
+	}
 
-            Event roomEvent = new Event(EventType.ADD_BLACKLIST, programIdx, userIdx, blackUser, "", "", "","");
-            chattingMapper.insertEvent(roomEvent);
-        }
+	public void addBlackList(long internalIdx, int userIdx, int programIdx, int blackUser) throws Exception {
+		//TODO 메모리에 담는 구조임 현재, 디비에도 담고 꺼낼 수 있도록 개선 해야함
+		chattingManagerService.addBlackList(internalIdx, programIdx, blackUser);
 
-        public void removeBlackList(long internalIdx, int userIdx, int programIdx, int blackUser) throws Exception {
-            chatManager.removeBlackList(internalIdx, programIdx, blackUser);
+		Event roomEvent = new Event(EventType.ADD_BLACKLIST.getValue(), programIdx, userIdx, blackUser, "", "", "","");
+		chattingMapper.insertEvent(roomEvent);
+	}
 
-            Event roomEvent = new Event(EventType.REMOVE_BLACKLIST, programIdx, userIdx, blackUser, "", "", "","");
-            chattingMapper.insertEvent(roomEvent);
-        }
-        */
+	public void removeBlackList(long internalIdx, int userIdx, int programIdx, int blackUser) throws Exception {
+		chattingManagerService.removeBlackList(internalIdx, programIdx, blackUser);
+
+		Event roomEvent = new Event(EventType.REMOVE_BLACKLIST.getValue(), programIdx, userIdx, blackUser, "", "", "","");
+		chattingMapper.insertEvent(roomEvent);
+	}
+
 	public Event sendEvent(long internalIdx, Event chatDTO) throws Exception{
 		chattingMapper.insertEvent(chatDTO);
 		chatDTO.setIdx(chatDTO.getIdx());
@@ -98,42 +99,4 @@ public class ChattingService {
 	public ArrayList<Event> getNewEvents(long internalIdx) throws Exception {
 		return chattingManagerService.getNewEvents(internalIdx);
 	}
-
-	/*
-	public List<Event> getBeforeMessage(int userIdx, String userId, String roomName) {
-		// TODO Auto-generated method stub
-		if("admin".equals(userId)){
-			return chattingMapper.getBeforeAdminMessage(roomName);
-		}else{
-			return chattingMapper.getBeforeMessage(userIdx,userId,roomName);
-		}
-	}
-
-	public List<Event> getBeforeAllChatMessage(String roomName) {
-		// TODO Auto-generated method stub
-		return chattingMapper.getBeforeAllChatMessage(roomName);
-	}
-
-	public List<Event> getBeforeApproveMessage(String roomName) {
-		// TODO Auto-generated method stub
-		return chattingMapper.getBeforeApproveMessage(roomName);
-	}
-
-	public void updateMessageType(int idx) {
-		// TODO Auto-generated method stub
-		chattingMapper.updateMessageType(idx);
-	}
-
-	public List<Event> blackUserList(String roomName) {
-		// TODO Auto-generated method stub
-		return chattingMapper.blackUserList(roomName);
-	}
-
-	public int removeBlackUser(int idx) {
-		// TODO Auto-generated method stub
-		if(chattingMapper.removeBlackUser(idx)>0){
-			return chattingMapper.removeBlackUser(idx);
-		}
-		return -1;
-	}*/
 }

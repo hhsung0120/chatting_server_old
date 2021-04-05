@@ -260,7 +260,7 @@ var ChatClient = function() {
 		
 		$.ajax({
 			method: "DELETE",
-			url: '/chatRoom/blacklist',
+			url: '/chattingRoom/blacklist',
 			contentType:'application/json; charset=UTF-8',
 			headers: userInfo,
 			data: JSON.stringify(sendData)
@@ -328,58 +328,23 @@ var ChatClient = function() {
 			}
 		});			
 	};
-	var getBeforeMessage = function(userId,userIdx,roomName,type,callback){
-		$.ajax({
-			method : "GET",
-			url : "/message",
-			contentType : "applcation/json; charset=UTF-8",
-			data: {
-				userId : userId,
-				userIdx : userIdx,
-				roomName : roomName,
-				type : type
-			}
-		}).done(function(data){
-			if(data !=null){
-//				alert(data);
-				callback(data);
-			}
-		});
-	};
-	var getBlackUserList = function(roomName,callback){
-		$.ajax({
-			method : "GET",
-			url : "/blackUserList",
-			contentType : "applcation/json; charset=UTF-8",
-			data: {
-				roomName : roomName
-			}
-		}).done(function(data){
-			if(callback){
-				callback(data);			
-			}
-		}).fail(function(data) {
-		});
-	};
-	
+
 	return {
-		getUserIdx: getUserIdx,
-		setUserInfo: setUserInfo,
-		enterChatRoom: enterChatRoom,
-		exitChatRoom: exitChatRoom,
-		updateChatRoom: updateChatRoom,
-		getChatRoomList: getChatRoomList,
-		getUserList: getUserList,
-		getNewEvent: getNewEvent,		
-		sendMessage: sendMessage,
-		sendAdminMessage: sendAdminMessage,
-		sendDirectMessage: sendDirectMessage,
-		getBlackList: getBlackList,
-		addBlackList: addBlackList,
-		removeBlackList: removeBlackList,
-		approveMessage: approveMessage,
-		rejectMessage: rejectMessage,
-		getBeforeMessage : getBeforeMessage,
-		getBlackUserList : getBlackUserList
+		getUserIdx: getUserIdx
+		, setUserInfo: setUserInfo
+		, enterChatRoom: enterChatRoom
+		, exitChatRoom: exitChatRoom
+		, updateChatRoom: updateChatRoom
+		, getChatRoomList: getChatRoomList
+		, getUserList: getUserList
+		, getNewEvent: getNewEvent
+		, sendMessage: sendMessage
+		, sendAdminMessage: sendAdminMessage
+		, sendDirectMessage: sendDirectMessage
+		, getBlackList: getBlackList
+		, addBlackList: addBlackList
+		, removeBlackList: removeBlackList
+		, approveMessage: approveMessage
+		, rejectMessage: rejectMessage
 	};
 } ();

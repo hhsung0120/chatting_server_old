@@ -103,15 +103,13 @@ public class ChattingManager {
 
 		return chattingRoomManager;
 	}
-	/*
+
 	private void checkAdmin(long internalIdx) throws Exception {
-		ChatUser user = chattingUsers.get(internalIdx);
+		ChattingUser user = chattingUsers.get(internalIdx);
 		if (user == null || user.isAdmin() != true) {
 			throw new UnauthorizedException();
 		}
 	}
-
-	*/
 
 	/*
 	
@@ -288,9 +286,10 @@ public class ChattingManager {
 
 		return 0;
 	}
-	/*
-	public Integer[] getBlackList(long internalIdx, int roomIdx) throws Exception {
-		ChatRoomManager chatRoomManager = chattingRooms.get(roomIdx);
+
+	public Long[] getBlackList(long internalIdx, int roomIdx) throws Exception {
+		//개별 채팅방 안에 유저가 담기도록 개선해야함
+		ChattingRoomManager chatRoomManager = chattingRooms.get(roomIdx);
 		if (chatRoomManager == null) {
 			return null;
 		}
@@ -302,15 +301,13 @@ public class ChattingManager {
 	
 	public void addBlackList(long internalIdx, int programIdx, int blackUser) throws Exception {
 		if (programIdx != -1) {
-			ChatRoomManager chatRoomManager = chattingRooms.get(programIdx);
+			ChattingRoomManager chatRoomManager = chattingRooms.get(programIdx);
 			if (chatRoomManager == null) {
 				throw new ChatRoomNotExistException();
 			}
-			
-			checkAdmin(internalIdx);
 
+			checkAdmin(internalIdx);
 			chatRoomManager.addBlackList(blackUser);
-			saveRooms();
 		}
 		else {
 			throw new BadArgumentException();
@@ -319,7 +316,7 @@ public class ChattingManager {
 	
 	public void removeBlackList(long internalIdx, int programIdx, int blackUser) throws Exception {
 		if (programIdx != -1) {
-			ChatRoomManager chatRoomManager = chattingRooms.get(programIdx);
+			ChattingRoomManager chatRoomManager = chattingRooms.get(programIdx);
 			if (chatRoomManager == null) {
 				throw new ChatRoomNotExistException();
 			}
@@ -327,10 +324,9 @@ public class ChattingManager {
 			checkAdmin(internalIdx);
 			
 			chatRoomManager.removeBlackList(blackUser);
-			saveRooms();
 		}
 	}
-	*/
+
 	public ArrayList<Users> getUserList(int roomIdx) {
 		ArrayList<Users> userList = new ArrayList<Users>();
 		
@@ -426,7 +422,10 @@ public class ChattingManager {
 		ChattingRoomManager room = chattingRooms.get(event.getProgramIdx());
 		if (room != null) { 
 			ChattingUser user;
-			
+
+			System.out.println(room.toString());
+			System.out.println(room.isBlackList(event.getFromUserIdx()));
+			System.out.println(event.getFromUserIdx());
 			if (room.isBlackList(event.getFromUserIdx())) {
 				event.setType(EventType.BLOCKED_MSG.getValue());
 				sendEventToPerson(internalIdx, event);
