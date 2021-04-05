@@ -41,6 +41,7 @@ public class ChattingService {
 		return enterRoomResult;
 	}
 
+
 	/*public ArrayList<ChatRoomData> listChatRooms(){
 		return chatManager.getChatRoomList();
 	}
