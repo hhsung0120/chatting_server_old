@@ -19,20 +19,7 @@ public class EventManager {
 		
 		return event;
 	}
-	
-	public static Event makeUpdateRoomEvent(ChattingRoom chattingRoom) {
-		Event event = new Event();
-		
-		event.setType(EventType.UPDATE_CHATROOM.getValue());
-		event.setProgramIdx(chattingRoom.getProgramIdx());
-		event.setFrom_userIdx(chattingRoom.getUserIdx());
-		event.setTo_userIdx(chattingRoom.getAdminIdx());
-		event.setName(chattingRoom.getName());
-		event.setMessage(chattingRoom.getDescription());
-		
-		return event;
-	}
-	
+
 	public static Event makeEnterRoomEvent(int roomIdx, Users chatroomUser) {
 		Event event = new Event();
 		

@@ -111,66 +111,6 @@ public class ChattingManager {
 		}
 	}
 
-	/*
-	
-	public ChatRoomData updateChatRoom(long internalIdx, site.heeseong.chatting.model.ChatRoom roomInfo) throws Exception {
-		ChatRoomManager chatRoomManager = chattingRooms.get(roomInfo.getProgramIdx());
-		
-		checkAdmin(internalIdx);
-		
-		if (chatRoomManager == null) {
-			throw new ChatRoomNotExistException();
-		}
-		
-		ChatRoomData upadteRoomData = new ChatRoomData();
-		if (roomInfo.getName() != null) {
-			upadteRoomData.setName(roomInfo.getName());
-		}
-		else {
-			upadteRoomData.setName(chatRoomManager.getName());
-		}
-		if (roomInfo.getPassword() != null) {
-			upadteRoomData.setPassword(roomInfo.getPassword());
-		}
-		else {
-			upadteRoomData.setPassword(chatRoomManager.getPassword());
-		}
-		if (roomInfo.getDescription() != null) {
-			upadteRoomData.setDescription(roomInfo.getDescription());
-		}
-		else {
-			upadteRoomData.setDescription(chatRoomManager.getDescription());
-		}
-		if (roomInfo.getStatus() != null) {
-			upadteRoomData.setStatus(roomInfo.getStatus());
-		}
-		else {
-			upadteRoomData.setStatus(chatRoomManager.getStatus());
-		}
-		if (roomInfo.getType() != -1) {
-			upadteRoomData.setType(roomInfo.getType());
-		}
-		else {
-			upadteRoomData.setType(chatRoomManager.getType());
-		}
-		if (roomInfo.getAdminIdx() != -1) {
-			upadteRoomData.setAdminIdx(roomInfo.getAdminIdx());
-		}
-		else {
-			upadteRoomData.setAdminIdx(chatRoomManager.getAdminIdx());
-		}
-		upadteRoomData.setUserIdx(chatRoomManager.getUserIdx());
-		
-		chatRoomManager.setChatRoom(upadteRoomData);
-		
-		Event event = EventManager.makeUpdateRoomEvent(roomInfo);
-		sendEvent(internalIdx, event);
-		chattingMapper.addEvent(event);
-		
-		return upadteRoomData;
-	}
-
-	*/
 	private void removeChatRoom(long internalIdx, int roomIdx) throws Exception {
 		ChattingRoomManager chatRoomManager = chattingRooms.get(roomIdx);
 		if (chatRoomManager == null) {
@@ -186,28 +126,28 @@ public class ChattingManager {
 		sendEvent(internalIdx, event);
 		chattingMapper.insertEvent(event);
 	}
-	/*
-	public ArrayList<ChatRoomData> getChatRoomList() {
-		ArrayList<ChatRoomData> roomList = new ArrayList<ChatRoomData>();
+
+	public ArrayList<ChattingRoom> getChatRoomList() {
+		ArrayList<ChattingRoom> roomList = new ArrayList<ChattingRoom>();
 		
-		for (Entry<Integer, ChatRoomManager> roomEntry : chattingRooms.entrySet()) {
-			ChatRoomManager room = roomEntry.getValue();
+		for (Entry<Integer, ChattingRoomManager> roomEntry : chattingRooms.entrySet()) {
+			ChattingRoomManager room = roomEntry.getValue();
 			if (room != null) {
-				roomList.add(room.getChatRoom());
+				roomList.add(room.getChattingRoomData());
 			}
 		}
 		
 		return roomList;
 	}
-	
-	public ChatRoomData getChatRoom(int roomIdx) {
-		ChatRoomManager room = chattingRooms.get(roomIdx);
+
+	public ChattingRoom getChatRoom(int roomIdx) {
+		ChattingRoomManager room = chattingRooms.get(roomIdx);
 		if (room != null) {
-			return room.getChatRoom();
+			return room.getChattingRoomData();
 		}
 		return null;
 	}
-	*/
+
 
 	/**
 	 * 화면에서 넘겨준 유저 정보를 최종적으로 채팅할 유저에 대한 정보로 셋팅
@@ -423,9 +363,6 @@ public class ChattingManager {
 		if (room != null) { 
 			ChattingUser user;
 
-			System.out.println(room.toString());
-			System.out.println(room.isBlackList(event.getFromUserIdx()));
-			System.out.println(event.getFromUserIdx());
 			if (room.isBlackList(event.getFromUserIdx())) {
 				event.setType(EventType.BLOCKED_MSG.getValue());
 				sendEventToPerson(internalIdx, event);
@@ -456,44 +393,12 @@ public class ChattingManager {
 					sendEventToPerson(waitEvent.getProgramIdx(), waitEvent.getFromUserIdx(), waitEvent);
 				}
 			}
-			/*switch(room.getType()) {
-			case RoomType.MANY_TO_MANY :
-				sendEventToRoom(internalIdx, event);
-				break;
-			case RoomType.ONE_TO_MANY :
-				user = chattingUsers.get(internalIdx);
-				if (user != null && user.isAdmin() == true) {
-					// admin user : send to all user
-					sendEventToRoom(internalIdx, event);
-				}
-				else {
-					// normal user : send to admin
-					sendEventToPerson(room.getProgramIdx(), room.getAdminIdx(), event);
-					sendEventToPerson(room.getProgramIdx(), event.getFromUserIdx(), event);
-				}
-				break;
-			case RoomType.APPROVAL :
-				user = chattingUsers.get(internalIdx);
-				if (user != null && user.isAdmin() == true) {
-					// admin user : without approval
-					sendEventToRoom(internalIdx, event);
-				} else {
-					// normal user : send approval request to admin
-					event.setType(EventType.REQ_APPROVAL_MSG.getValue());
-					sendEventToPerson(room.getProgramIdx(), room.getAdminIdx(), event);
-					Event waitEvent = EventManager.cloneEvent(event);
-					waitEvent.setType(EventType.WAIT_APPROVAL_MSG.getValue());
-					sendEventToPerson(waitEvent.getProgramIdx(), waitEvent.getFromUserIdx(), waitEvent);
-				}
-				break;
-			}*/
 		}else {
 			throw new BadArgumentException();
 		}
 	}
 
 	public void sendEvent(long internalIdx, Event event) throws Exception {
-		System.out.println(event.toString());
 		if(event.getType() == EventType.NORMAL_MSG.getValue()) {
 			sendMessage(internalIdx, event);
 		}else if(event.getType() == EventType.ENTER_USER.getValue()){
@@ -521,29 +426,25 @@ public class ChattingManager {
 		case EventType.REMOVE_CHATROOM:
 			sendEventToAll(internalIdx, event);
 			break;
-		case EventType.UPDATE_CHATROOM:
-			sendEventToRoom(internalIdx, event, false);
-			break;
 		}*/
 	}
 
-	/*
+
 	public void checkUsersTimeout() {
-		Iterator<Entry<Long, ChatUser>> iter = `chattingUsers`.entrySet().iterator();
+		Iterator<Entry<Long, ChattingUser>> iter = chattingUsers.entrySet().iterator();
 		while (iter.hasNext()) {
-			Entry<Long, ChatUser> userEntry = iter.next();
-			ChatUser user = userEntry.getValue();
+			Entry<Long, ChattingUser> userEntry = iter.next();
+			ChattingUser user = userEntry.getValue();
 			if (user != null) {
 				if (user.checkTimeout()) {
 					try {
 						log.debug("timeout occurred : " + user.getUserIdx());
 						leaveChatRoom(user.getInternalIdx(), user.getProgramIdx(), iter);
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
 			}
 		}
-	}*/
+	}
 }

@@ -42,24 +42,18 @@ public class ChattingService {
 	}
 
 
-	/*public ArrayList<ChatRoomData> listChatRooms(){
-		return chatManager.getChatRoomList();
+	public ArrayList<ChattingRoom> listChatRooms(){
+		return chattingManagerService.getChatRoomList();
 	}
 
-	public ChatRoomData getChatRoom(int roomIdx){
-		return chatManager.getChatRoom(roomIdx);
-	}
-	
-	public ChatRoomData updateChatRoom(long internalIdx, ChatRoom roomInfo) throws Exception {
-		return chatManager.updateChatRoom(internalIdx, roomInfo);
+	public ChattingRoom getChatRoom(int roomIdx){
+		return chattingManagerService.getChatRoom(roomIdx);
 	}
 
-*/
 	public ArrayList<Users> listUsers(int roomIdx){
 		return chattingManagerService.getUserList(roomIdx);
 	}
 
-	
 	public void leaveChatRoom(int programIdx, int userIdx, long internalIdx) throws Exception {
 		chattingManagerService.leaveChatRoom(internalIdx, programIdx, null);
 
