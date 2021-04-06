@@ -1,14 +1,15 @@
 package site.heeseong.chatting_server.manager;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import site.heeseong.chatting_server.event_enum.EventType;
 import site.heeseong.chatting_server.event_enum.RoomType;
 import site.heeseong.chatting_server.exceptions.*;
 import site.heeseong.chatting_server.mapper.ChattingMapper;
-import site.heeseong.chatting_server.mapper.ContextMapper;
-import site.heeseong.chatting_server.model.*;
+import site.heeseong.chatting_server.model.ChattingRoom;
+import site.heeseong.chatting_server.model.EnterRoomResult;
+import site.heeseong.chatting_server.model.Event;
+import site.heeseong.chatting_server.model.Users;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -31,10 +32,8 @@ public class ChattingManager {
 	private long internalIndex = 0;
 
 	final private ChattingMapper chattingMapper;
-	final private ContextMapper contextMapper;
-	public ChattingManager(ChattingMapper chattingMapper, ContextMapper contextMapper){
+	public ChattingManager(ChattingMapper chattingMapper){
 		this.chattingMapper = chattingMapper;
-		this.contextMapper = contextMapper;
 	}
 
 	public EnterRoomResult enterChatRoom(ChattingRoom chattingRoom, Users users, boolean notify) throws Exception {
