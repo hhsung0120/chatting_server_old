@@ -15,7 +15,6 @@ public class Users {
 	private String userName;
 	private boolean isAdmin;
 
-
 	public Users(long userIdx, String userId, String userName, boolean isAdmin){
 		this.internalIdx = -1;
 		this.userIdx = userIdx;
