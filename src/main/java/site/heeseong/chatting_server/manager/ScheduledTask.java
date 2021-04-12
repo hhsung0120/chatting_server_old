@@ -6,8 +6,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ScheduledTask {
 
+	final private ChattingManager chatManager;
     @Autowired
-	private ChattingManager chatManager;
+    private ScheduledTask(ChattingManager chatManager){
+        this.chatManager = chatManager;
+    }
 
     @Scheduled(fixedRate = 60000)
     public void checkUserTimeout() {

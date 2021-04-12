@@ -1,14 +1,14 @@
 package site.heeseong.chatting_server.mapper;
 
 import org.apache.ibatis.annotations.*;
-import site.heeseong.chatting_server.model.Event;
+import site.heeseong.chatting_server.model.MessageEvent;
 
 
 @Mapper
 public interface ChattingMapper {
 	@Insert("insert into chatting(type, programIdx, from_userIdx, to_userIdx, userid, to_userId,  name, message,regiDate) values (#{type}, #{programIdx}, #{fromUserIdx}, #{to_userIdx}, #{userId}, #{to_userId}, #{name}, #{message},utc_timestamp())")
 	@Options(useGeneratedKeys=true, keyProperty="idx")//고유값을 받기위해 id > idx 수정 16.10.17
-	public long insertEvent(Event chatDTO) throws Exception;
+	public long insertEvent(MessageEvent chatDTO) throws Exception;
 
 	/*@Select("select * from chatting where type in (0,1) and programIdx = #{roomName} order by regidate asc")
 	public List<Event> getBeforeAdminMessage(String roomName);

@@ -1,73 +1,73 @@
 package site.heeseong.chatting_server.manager;
 
 
-import site.heeseong.chatting_server.event_enum.EventType;
+import site.heeseong.chatting_server.event_enum.MessageEventType;
 import site.heeseong.chatting_server.model.ChattingRoom;
-import site.heeseong.chatting_server.model.Event;
+import site.heeseong.chatting_server.model.MessageEvent;
 import site.heeseong.chatting_server.model.Users;
 
 public class EventManager {
-	public static Event makeCreateRoomEvent(ChattingRoom chattingRoom) {
-		Event event = new Event();
+	public static MessageEvent makeCreateRoomEvent(ChattingRoom chattingRoom) {
+		MessageEvent messageEvent = new MessageEvent();
 		
-		event.setType(EventType.CREATE_CHATROOM.getValue());
-		event.setProgramIdx(chattingRoom.getProgramIdx());
-		event.setFrom_userIdx(chattingRoom.getUserIdx());
-		event.setTo_userIdx(chattingRoom.getAdminIdx());
-		event.setName(chattingRoom.getName());
-		event.setMessage(chattingRoom.getDescription());
+		messageEvent.setType(MessageEventType.CREATE_CHATROOM.getValue());
+		messageEvent.setProgramIdx(chattingRoom.getProgramIdx());
+		messageEvent.setFrom_userIdx(chattingRoom.getUserIdx());
+		messageEvent.setTo_userIdx(chattingRoom.getAdminIdx());
+		messageEvent.setName(chattingRoom.getName());
+		messageEvent.setMessage(chattingRoom.getDescription());
 		
-		return event;
+		return messageEvent;
 	}
 
-	public static Event makeEnterRoomEvent(int roomIdx, Users chatroomUser) {
-		Event event = new Event();
+	public static MessageEvent makeEnterRoomEvent(int roomIdx, Users chatroomUser) {
+		MessageEvent messageEvent = new MessageEvent();
 		
-		event.setType(EventType.ENTER_USER.getValue());
-		event.setProgramIdx(roomIdx);
-		event.setFrom_userIdx((int)chatroomUser.getUserIdx());
-		event.setFromUserIdx((int)chatroomUser.getUserIdx());
-		event.setUserId(chatroomUser.getUserId());
-		event.setName(chatroomUser.getUserName());
+		messageEvent.setType(MessageEventType.ENTER_USER.getValue());
+		messageEvent.setProgramIdx(roomIdx);
+		messageEvent.setFrom_userIdx((int)chatroomUser.getUserIdx());
+		messageEvent.setFromUserIdx((int)chatroomUser.getUserIdx());
+		messageEvent.setUserId(chatroomUser.getUserId());
+		messageEvent.setName(chatroomUser.getUserName());
 		
-		return event;
+		return messageEvent;
 	}
 	
-	public static Event makeLeaveRoomEvent(int programIdx, long userIdx) {
-		Event event = new Event();
+	public static MessageEvent makeLeaveRoomEvent(int programIdx, long userIdx) {
+		MessageEvent messageEvent = new MessageEvent();
 		
-		event.setType(EventType.LEAVE_USER.getValue());
-		event.setProgramIdx(programIdx);
-		event.setFrom_userIdx(userIdx);
+		messageEvent.setType(MessageEventType.LEAVE_USER.getValue());
+		messageEvent.setProgramIdx(programIdx);
+		messageEvent.setFrom_userIdx(userIdx);
 		
-		return event;
+		return messageEvent;
 	}
 	
-	public static Event removeChatRoomEvent(int roomIdx) {
-		Event event = new Event();
+	public static MessageEvent removeChatRoomEvent(int roomIdx) {
+		MessageEvent messageEvent = new MessageEvent();
 		
-		event.setType(EventType.REMOVE_CHATROOM.getValue());
-		event.setProgramIdx(roomIdx);
+		messageEvent.setType(MessageEventType.REMOVE_CHATROOM.getValue());
+		messageEvent.setProgramIdx(roomIdx);
 		
-		return event;
+		return messageEvent;
 	}
 	
-	public static Event cloneEvent(Event event) {
-		Event newEvent = new Event();
+	public static MessageEvent cloneEvent(MessageEvent messageEvent) {
+		MessageEvent newMessageEvent = new MessageEvent();
 
-		newEvent.setProgramIdx(event.getProgramIdx());
-		newEvent.setFrom_userIdx(event.getFrom_userIdx());
-		newEvent.setType(event.getType());
-		if (event.getUserId() != null) {
-			newEvent.setUserId(event.getUserId());
+		newMessageEvent.setProgramIdx(messageEvent.getProgramIdx());
+		newMessageEvent.setFrom_userIdx(messageEvent.getFrom_userIdx());
+		newMessageEvent.setType(messageEvent.getType());
+		if (messageEvent.getUserId() != null) {
+			newMessageEvent.setUserId(messageEvent.getUserId());
 		}
-		if (event.getName() != null) {
-			newEvent.setName(event.getName());
+		if (messageEvent.getName() != null) {
+			newMessageEvent.setName(messageEvent.getName());
 		}
-		newEvent.setTo_userIdx(event.getTo_userIdx());
-		if (event.getMessage() != null) {
-			newEvent.setMessage(event.getMessage());
+		newMessageEvent.setTo_userIdx(messageEvent.getTo_userIdx());
+		if (messageEvent.getMessage() != null) {
+			newMessageEvent.setMessage(messageEvent.getMessage());
 		}
-		return newEvent;
+		return newMessageEvent;
 	}
 }

@@ -4,8 +4,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import site.heeseong.chatting_server.model.ChattingRoom;
-import site.heeseong.chatting_server.model.EnterRoomResult;
-import site.heeseong.chatting_server.model.UserRoomMapperDTO;
 import site.heeseong.chatting_server.model.Users;
 import site.heeseong.chatting_server.service.ChattingService;
 
@@ -24,7 +22,7 @@ public class ChattingRoomController {
 	}
 
 	@PostMapping(value="/enterUser")
-	public EnterRoomResult enterChatRoom(
+	public ChattingRoom enterChatRoom(
 			@RequestHeader("userIdx") long userIdx
 			, @RequestHeader("userId") String userId
 			, @RequestHeader("userName") String userName
@@ -40,7 +38,7 @@ public class ChattingRoomController {
 		//유저 데이터 셋팅
 		//이부분은 전부가 세션으로 처리 가능
 		Users users = new Users(chattingRoom.getUserIdx(), chattingRoom.getUserId(), chattingRoom.getUserName(), chattingRoom.isAdmin());
-		return chattingService.enterChatRoom(chattingRoom, users);
+		return chattingService.enterChattingRoom(chattingRoom, users);
 	}
 
 	@RequestMapping(value="/users", method=RequestMethod.GET)
@@ -70,7 +68,8 @@ public class ChattingRoomController {
 			@RequestHeader("internalIdx") long internalIdx,
 			@RequestHeader("programIdx") int programIdx,
 			@RequestHeader("userIdx") int userIdx,
-			@RequestBody UserRoomMapperDTO blackUser) throws Exception {
+			@RequestBody Users blackUser) throws Exception {
+
 		chattingService.addBlackList(internalIdx, userIdx, programIdx, blackUser.getUserIdx());
 	}
 
@@ -79,7 +78,7 @@ public class ChattingRoomController {
 			@RequestHeader("internalIdx") long internalIdx,
 			@RequestHeader("programIdx") int programIdx,
 			@RequestHeader("userIdx") int userIdx,
-			@RequestBody UserRoomMapperDTO blackUser) throws Exception {
+			@RequestBody Users blackUser) throws Exception {
 		chattingService.removeBlackList(internalIdx, userIdx, programIdx, blackUser.getUserIdx());
 	}
 

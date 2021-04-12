@@ -2,12 +2,11 @@ package site.heeseong.chatting_server.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import site.heeseong.chatting_server.event_enum.EventType;
+import site.heeseong.chatting_server.event_enum.MessageEventType;
 import site.heeseong.chatting_server.manager.ChattingManager;
 import site.heeseong.chatting_server.mapper.ChattingMapper;
 import site.heeseong.chatting_server.model.ChattingRoom;
-import site.heeseong.chatting_server.model.EnterRoomResult;
-import site.heeseong.chatting_server.model.Event;
+import site.heeseong.chatting_server.model.MessageEvent;
 import site.heeseong.chatting_server.model.Users;
 
 import java.util.ArrayList;
@@ -16,8 +15,8 @@ import java.util.ArrayList;
 @Service
 public class ChattingService {
 
-	final private ChattingManager chattingManagerService;
-	final private ChattingMapper chattingMapper;
+	private final ChattingManager chattingManagerService;
+	private final ChattingMapper chattingMapper;
 
 	@Autowired
 	private ChattingService(ChattingManager chattingManagerService, ChattingMapper chattingMapper){
@@ -25,20 +24,20 @@ public class ChattingService {
 		this.chattingMapper = chattingMapper;
 	}
 
-	public EnterRoomResult enterChatRoom(ChattingRoom chattingRoom, Users users) throws Exception {
-		EnterRoomResult enterRoomResult = chattingManagerService.enterChatRoom(chattingRoom, users, true);
+	public ChattingRoom enterChattingRoom(ChattingRoom chattingRoom, Users users) throws Exception {
+		ChattingRoom resultChattingRoom = chattingManagerService.enterChatRoom(chattingRoom, users, true);
 
-		Event roomEvent = new Event(
-				EventType.ENTER_USER.getValue()
-				, enterRoomResult.getProgramIdx()
+		MessageEvent roomMessageEvent = new MessageEvent(
+				MessageEventType.ENTER_USER.getValue()
+				, resultChattingRoom.getProgramIdx()
 				, users.getUserIdx()
 				, -1
 				, users.getUserId()
 				, users.getUserName()
-				, enterRoomResult.getName() + "_" + enterRoomResult.getDescription(), "");
+				, resultChattingRoom.getName() + "_" + resultChattingRoom.getDescription(), "");
 
-		chattingMapper.insertEvent(roomEvent);
-		return enterRoomResult;
+		chattingMapper.insertEvent(roomMessageEvent);
+		return resultChattingRoom;
 	}
 
 
@@ -57,8 +56,8 @@ public class ChattingService {
 	public void leaveChatRoom(int programIdx, int userIdx, long internalIdx) throws Exception {
 		chattingManagerService.leaveChatRoom(internalIdx, programIdx, null);
 
-		Event roomEvent = new Event(EventType.LEAVE_USER.getValue(), programIdx, userIdx, -1, "", "", "","");
-		chattingMapper.insertEvent(roomEvent);
+		MessageEvent roomMessageEvent = new MessageEvent(MessageEventType.LEAVE_USER.getValue(), programIdx, userIdx, -1, "", "", "","");
+		chattingMapper.insertEvent(roomMessageEvent);
 	}
 
 
@@ -66,22 +65,22 @@ public class ChattingService {
 		return chattingManagerService.getBlackList(internalIdx, roomIdx);
 	}
 
-	public void addBlackList(long internalIdx, int userIdx, int programIdx, int blackUser) throws Exception {
+	public void addBlackList(long internalIdx, int userIdx, int programIdx, long blackUserIdx) throws Exception {
 		//TODO 메모리에 담는 구조임 현재, 디비에도 담고 꺼낼 수 있도록 개선 해야함
-		chattingManagerService.addBlackList(internalIdx, programIdx, blackUser);
+		chattingManagerService.addBlackList(internalIdx, programIdx, blackUserIdx);
 
-		Event roomEvent = new Event(EventType.ADD_BLACKLIST.getValue(), programIdx, userIdx, blackUser, "", "", "","");
-		chattingMapper.insertEvent(roomEvent);
+		MessageEvent roomMessageEvent = new MessageEvent(MessageEventType.ADD_BLACKLIST.getValue(), programIdx, userIdx, blackUserIdx, "", "", "","");
+		chattingMapper.insertEvent(roomMessageEvent);
 	}
 
-	public void removeBlackList(long internalIdx, int userIdx, int programIdx, int blackUser) throws Exception {
-		chattingManagerService.removeBlackList(internalIdx, programIdx, blackUser);
+	public void removeBlackList(long internalIdx, int userIdx, int programIdx, long blackUserIdx) throws Exception {
+		chattingManagerService.removeBlackList(internalIdx, programIdx, blackUserIdx);
 
-		Event roomEvent = new Event(EventType.REMOVE_BLACKLIST.getValue(), programIdx, userIdx, blackUser, "", "", "","");
-		chattingMapper.insertEvent(roomEvent);
+		MessageEvent roomMessageEvent = new MessageEvent(MessageEventType.REMOVE_BLACKLIST.getValue(), programIdx, userIdx, blackUserIdx, "", "", "","");
+		chattingMapper.insertEvent(roomMessageEvent);
 	}
 
-	public Event sendEvent(long internalIdx, Event chatDTO) throws Exception{
+	public MessageEvent sendEvent(long internalIdx, MessageEvent chatDTO) throws Exception{
 		chattingMapper.insertEvent(chatDTO);
 		chatDTO.setIdx(chatDTO.getIdx());
 		chattingManagerService.sendEvent(internalIdx, chatDTO);
@@ -91,7 +90,7 @@ public class ChattingService {
 		return chatDTO;
 	}
 
-	public ArrayList<Event> getNewEvents(long internalIdx) throws Exception {
+	public ArrayList<MessageEvent> getNewEvents(long internalIdx) throws Exception {
 		return chattingManagerService.getNewEvents(internalIdx);
 	}
 }

@@ -137,7 +137,7 @@ var ChatClient = function() {
 		if (userInfo.userIdx !== -1 && userInfo.programIdx !== -1) {
 			$.ajax({
 				method: "GET",
-				url: '/chattingRoom/event',
+				url: '/message/event',
 				contentType:'application/json; charset=UTF-8',
 				cache: false,
 				headers: userInfo
@@ -167,7 +167,7 @@ var ChatClient = function() {
 		};
 		$.ajax({
 			method: "POST",
-			url: '/chattingRoom/event',
+			url: '/message/event',
 			contentType:'application/json; charset=UTF-8',
 			headers: userInfo,
 			data: JSON.stringify(sendData)
@@ -197,7 +197,7 @@ var ChatClient = function() {
 		
 			$.ajax({
 				method: "POST",
-				url: '/chattingRoom/event',
+				url: '/message/event',
 				contentType:'application/json; charset=UTF-8',
 				headers: userInfo,
 				data: JSON.stringify(sendData)
@@ -222,7 +222,7 @@ var ChatClient = function() {
 		};
 		$.ajax({
 			method: "POST",
-			url: '/chattingRoom/event',
+			url: '/message/event',
 			contentType:'application/json; charset=UTF-8',
 			headers: userInfo,
 			data: JSON.stringify(sendData)
@@ -295,7 +295,7 @@ var ChatClient = function() {
 		};
 		$.ajax({
 			method: "POST",
-			url: '/chattingRoom/event',
+			url: '/message/event',
 			contentType:'application/json; charset=UTF-8',
 			headers: userInfo,
 			data: JSON.stringify(sendData)
@@ -318,7 +318,7 @@ var ChatClient = function() {
 		
 		$.ajax({
 			method: "POST",
-			url: '/chattingRoom/event',
+			url: '/message/event',
 			contentType:'application/json; charset=UTF-8',
 			headers: userInfo,
 			data: JSON.stringify(sendData)

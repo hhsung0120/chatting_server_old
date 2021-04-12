@@ -1,6 +1,6 @@
 package site.heeseong.chatting_server.event_enum;
 
-public enum EventType {
+public enum MessageEventType {
 
     NORMAL_MSG(0, "NORMAL_MSG")
     , DIRECT_MSG(1, "DIRECT_MSG")
@@ -25,11 +25,11 @@ public enum EventType {
     private int value = 0;
     private String textValue = "";
 
-    EventType(int value){
+    MessageEventType(int value){
         this.value = value;
     }
 
-    EventType(int value, String textValue){
+    MessageEventType(int value, String textValue){
         this.value = value;
         this.textValue = textValue;
     }

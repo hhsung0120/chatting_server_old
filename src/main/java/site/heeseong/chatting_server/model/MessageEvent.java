@@ -3,7 +3,7 @@ package site.heeseong.chatting_server.model;
 import lombok.Data;
 
 @Data
-public class Event {
+public class MessageEvent {
 	private int type;
 	private int programIdx;
 	private String userId;
@@ -18,9 +18,9 @@ public class Event {
 	private String regidate;
 	private int idx;
 
-	public Event(){}
+	public MessageEvent(){}
 
-	public Event(int type, int programIdx, long fromUserIdx, long toUserIdx, String id, String name, String msg, String to_userId ) {
+	public MessageEvent(int type, int programIdx, long fromUserIdx, long toUserIdx, String id, String name, String msg, String to_userId ) {
 		this.type = type;
 		this.programIdx = programIdx;
 		this.from_userIdx = fromUserIdx;
@@ -33,7 +33,7 @@ public class Event {
 	}
 
 
-	public Event(int type, int idx, String userid, String username) {
+	public MessageEvent(int type, int idx, String userid, String username) {
 		this(type, -1, idx, -1, userid, username, "","");
 	}
 }

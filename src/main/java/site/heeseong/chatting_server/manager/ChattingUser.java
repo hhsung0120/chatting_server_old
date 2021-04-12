@@ -2,7 +2,7 @@ package site.heeseong.chatting_server.manager;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import site.heeseong.chatting_server.model.Event;
+import site.heeseong.chatting_server.model.MessageEvent;
 import site.heeseong.chatting_server.model.Users;
 
 import java.util.ArrayList;
@@ -14,14 +14,14 @@ public class ChattingUser {
 
 	private Users users;
 	private int programIdx;
-	private ArrayBlockingQueue<Event> messageQueue;
+	private ArrayBlockingQueue<MessageEvent> messageQueue;
 	private long latestMessageTime;
 	private long DEFAULT_MESSAGE_TIMEOUT = 60 * 1000 * 2;	 // 2 minutes
 	private long userTimeout = DEFAULT_MESSAGE_TIMEOUT;
 
 	public ChattingUser(Users userInfo) {
 		users = userInfo;
-		messageQueue = new ArrayBlockingQueue<Event>(10);
+		messageQueue = new ArrayBlockingQueue<MessageEvent>(10);
 		latestMessageTime = System.currentTimeMillis();
 	}
 
@@ -45,10 +45,10 @@ public class ChattingUser {
 		return users.isAdmin();
 	}
 
-	public void postMessage(Event event) {
+	public void postMessage(MessageEvent messageEvent) {
 		if (messageQueue != null) {
 			try {
-				messageQueue.add(event);
+				messageQueue.add(messageEvent);
 			} catch (Exception e) {
 				decreaseUserTimeOut();
 				e.printStackTrace();
@@ -77,17 +77,17 @@ public class ChattingUser {
 	}
 	
 	@JsonIgnore
-	public ArrayList<Event> getEvents() {
+	public ArrayList<MessageEvent> getEvents() {
 		setLatestTime();
-		ArrayList<Event> events = new ArrayList<Event>();
+		ArrayList<MessageEvent> messageEvents = new ArrayList<MessageEvent>();
 		if (messageQueue != null) {
 			try {
-				Event event = messageQueue.poll(5000, TimeUnit.MILLISECONDS);
-				if (event != null && messageQueue != null) {
-					events.add(event);
+				MessageEvent messageEvent = messageQueue.poll(5000, TimeUnit.MILLISECONDS);
+				if (messageEvent != null && messageQueue != null) {
+					messageEvents.add(messageEvent);
 					if (messageQueue.size() != 0) {
 						for (int i = 0; i < messageQueue.size(); i++) {
-							events.add(messageQueue.take());
+							messageEvents.add(messageQueue.take());
 						}
 					}
 				}
@@ -96,7 +96,7 @@ public class ChattingUser {
 			}
 		}
 
-		return events;
+		return messageEvents;
 	}
 	
 	public void removeAll() {
