@@ -1,4 +1,4 @@
-package site.heeseong.chatting_server.model;
+package site.heeseong.chatting_server.component;
 
 
 import site.heeseong.chatting_server.event_enum.MessageEventType;

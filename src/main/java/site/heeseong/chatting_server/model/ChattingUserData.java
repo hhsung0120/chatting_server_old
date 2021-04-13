@@ -2,15 +2,13 @@ package site.heeseong.chatting_server.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import site.heeseong.chatting_server.model.MessageEvent;
-import site.heeseong.chatting_server.model.Users;
 
 import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 @Data
-public class ChattingUser {
+public class ChattingUserData {
 
 	private Users users;
 	private int programIdx;
@@ -19,8 +17,8 @@ public class ChattingUser {
 	private long DEFAULT_MESSAGE_TIMEOUT = 60 * 1000 * 2; // 2 minutes
 	private long userTimeout = DEFAULT_MESSAGE_TIMEOUT;
 
-	public ChattingUser(Users userInfo) {
-		users = userInfo;
+	public ChattingUserData(Users users) {
+		this.users = users;
 		messageQueue = new ArrayBlockingQueue<MessageEvent>(10);
 		latestMessageTime = System.currentTimeMillis();
 	}

@@ -26,7 +26,6 @@ public class ChattingService {
 
 	public ChattingRoom enterChattingRoom(ChattingRoom chattingRoom) throws Exception {
 		Users users = new Users(chattingRoom.getUserIdx(), chattingRoom.getUserId(), chattingRoom.getUserName(), chattingRoom.isAdmin());
-
 		ChattingRoom resultChattingRoom = chattingEventManagerService.enterChattingRoom(chattingRoom, users, true);
 
 		MessageEvent roomMessageEvent = new MessageEvent(
