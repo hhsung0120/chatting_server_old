@@ -1,84 +1,80 @@
-package site.heeseong.chatting_server.manager;
+package site.heeseong.chatting_server.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-
-import site.heeseong.chatting_server.model.ChattingRoom;
-import site.heeseong.chatting_server.model.Users;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Data
-public class ChattingRoomManager {
+public class ChattingRoomData {
 
-	private ChattingRoom chattingRoomData;
+	private ChattingRoom chattingRoom;
 	private ConcurrentHashMap<Long, Users> users;
 	private Object userLock = new Object();
-	private HashSet<Long> blackList = new HashSet<Long>();
 	private Object blackLock = new Object();
+	private HashSet<Long> blackList = new HashSet<Long>();
 
 	@JsonIgnore
 	public String getName() {
-		if (chattingRoomData != null) {
-			return chattingRoomData.getName();
+		if (chattingRoom != null) {
+			return chattingRoom.getName();
 		}
 		return null;
 	}
 	
 	@JsonIgnore
 	public String getPassword() {
-		if (chattingRoomData != null) {
-			return chattingRoomData.getPassword();
+		if (chattingRoom != null) {
+			return chattingRoom.getPassword();
 		}
 		return null;
 	}
 	
 	@JsonIgnore
 	public String getDescription() {
-		if (chattingRoomData != null) {
-			return chattingRoomData.getDescription();
+		if (chattingRoom != null) {
+			return chattingRoom.getDescription();
 		}
 		return null;
 	}
 	
 	@JsonIgnore
 	public int getProgramIdx() {
-		if (chattingRoomData != null) {
-			return chattingRoomData.getProgramIdx();
+		if (chattingRoom != null) {
+			return chattingRoom.getProgramIdx();
 		}
 		return -1;
 	}
 
 	@JsonIgnore
 	public long getUserIdx() {
-		if (chattingRoomData != null) {
-			return chattingRoomData.getUserIdx();
+		if (chattingRoom != null) {
+			return chattingRoom.getUserIdx();
 		}
 		return -1;
 	}
 	
 	@JsonIgnore
 	public String getStatus() {
-		if (chattingRoomData != null) {
-			return chattingRoomData.getStatus();
+		if (chattingRoom != null) {
+			return chattingRoom.getStatus();
 		}
 		return null;
 	}
 	
 	@JsonIgnore
 	public int getType() {
-		if (chattingRoomData != null) {
-			return chattingRoomData.getType();
+		if (chattingRoom != null) {
+			return chattingRoom.getType();
 		}
 		return 0;
 	}
 	
 	@JsonIgnore
 	public long getAdminIdx() {
-		if (chattingRoomData != null) {
-			return chattingRoomData.getAdminIdx();
+		if (chattingRoom != null) {
+			return chattingRoom.getAdminIdx();
 		}
 		return 0;
 	}

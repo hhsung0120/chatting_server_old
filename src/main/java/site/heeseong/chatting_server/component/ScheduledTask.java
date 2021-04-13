@@ -1,4 +1,4 @@
-package site.heeseong.chatting_server.manager;
+package site.heeseong.chatting_server.component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ScheduledTask {
 
-	final private ChattingManager chatManager;
+	final private ChattingEventManager chatManager;
     @Autowired
-    private ScheduledTask(ChattingManager chatManager){
+    private ScheduledTask(ChattingEventManager chatManager){
         this.chatManager = chatManager;
     }
 

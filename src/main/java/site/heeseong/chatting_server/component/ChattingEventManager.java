@@ -1,4 +1,4 @@
-package site.heeseong.chatting_server.manager;
+package site.heeseong.chatting_server.component;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -6,9 +6,7 @@ import site.heeseong.chatting_server.event_enum.MessageEventType;
 import site.heeseong.chatting_server.event_enum.ChattingRoomType;
 import site.heeseong.chatting_server.exceptions.*;
 import site.heeseong.chatting_server.mapper.ChattingMapper;
-import site.heeseong.chatting_server.model.ChattingRoom;
-import site.heeseong.chatting_server.model.MessageEvent;
-import site.heeseong.chatting_server.model.Users;
+import site.heeseong.chatting_server.model.*;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -18,40 +16,37 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Log4j2
 @Component
-public class ChattingManager {
+public class ChattingEventManager {
 
-	//채팅방
-	private ConcurrentHashMap<Integer, ChattingRoomManager> chattingRooms = new ConcurrentHashMap<Integer, ChattingRoomManager>();
-	//채팅 유저
+	private ConcurrentHashMap<Integer, ChattingRoomData> chattingRooms = new ConcurrentHashMap<Integer, ChattingRoomData>();
 	private ConcurrentHashMap<Long, ChattingUser> chattingUsers = new ConcurrentHashMap<Long, ChattingUser>();
-	//블락 채팅방
 	private Object chattingRoomLock = new Object();
-	//블락 유저
 	private Object chattingUserLock = new Object();
 	private long internalIndex = 0;
 
 	final private ChattingMapper chattingMapper;
-	public ChattingManager(ChattingMapper chattingMapper){
+	public ChattingEventManager(ChattingMapper chattingMapper){
 		this.chattingMapper = chattingMapper;
 	}
 
-	public ChattingRoom enterChatRoom(ChattingRoom chattingRoom, Users users, boolean notify) throws Exception {
+	public ChattingRoom enterChattingRoom(ChattingRoom chattingRoom, Users users, boolean notify) throws Exception {
 		if (users.getInternalIdx() != -1) {
 			throw new BadArgumentException();
 		}
 
-		//유저 정보 -> 채팅 유저 정보로 변환
+		//setChattingUser(users);
+
 		ChattingUser chattingUser = createChattingUser(users);
 
 		//채팅 방을 만들어주는 로직
 		//프로그램 idx 유니크 키
-		ChattingRoomManager chattingRoomManager = chattingRooms.get(chattingRoom.getProgramIdx());
+		ChattingRoomData chattingRoomData = chattingRooms.get(chattingRoom.getProgramIdx());
 		//채팅 방이 존재 하지 않는다면 새로 생성
-		if (chattingRoomManager == null) {
-			chattingRoomManager = createChattingRoom(chattingRoom, true);
+		if (chattingRoomData == null) {
+			chattingRoomData = createChattingRoom(chattingRoom, true);
 		}
 
-		if (chattingRoomManager.addUser(chattingUser.getUsers()) == -1) {
+		if (chattingRoomData.addUser(chattingUser.getUsers()) == -1) {
 			throw new UserExistException();
 		}
 
@@ -66,8 +61,8 @@ public class ChattingManager {
 		return chattingRoom;
 	}
 
-	private ChattingRoomManager createChattingRoom(ChattingRoom chattingRoom, boolean log) throws Exception {
-		ChattingRoomManager chattingRoomManager;
+	private ChattingRoomData createChattingRoom(ChattingRoom chattingRoom, boolean log) throws Exception {
+		ChattingRoomData chattingRoomData;
 
 		synchronized (chattingRoomLock) {
 			if (chattingRooms.get(chattingRoom.getProgramIdx()) != null) {
@@ -84,12 +79,12 @@ public class ChattingManager {
 			newChattingRoomData.setAdminIdx(chattingRoom.getAdminIdx());
 			newChattingRoomData.setUserIdx(chattingRoom.getUserIdx());
 
-			WeakReference<ChattingRoomManager> chatRoomRef = new WeakReference<ChattingRoomManager>(new ChattingRoomManager());
-			chattingRoomManager = chatRoomRef.get();
-			chattingRoomManager.setChattingRoomData(newChattingRoomData);
+			WeakReference<ChattingRoomData> chatRoomRef = new WeakReference<ChattingRoomData>(new ChattingRoomData());
+			chattingRoomData = chatRoomRef.get();
+			chattingRoomData.setChattingRoom(newChattingRoomData);
 
 			//programIdx가 유니크키 이기 때문에 그 키 값으로 새로운 방 생성
-			chattingRooms.put(chattingRoomManager.getProgramIdx(), chattingRoomManager);
+			chattingRooms.put(chattingRoomData.getProgramIdx(), chattingRoomData);
 		}
 
 		if (log) {
@@ -98,7 +93,7 @@ public class ChattingManager {
 			chattingMapper.insertEvent(messageEvent);
 		}
 
-		return chattingRoomManager;
+		return chattingRoomData;
 	}
 
 	private void checkAdmin(long internalIdx) throws Exception {
@@ -109,7 +104,7 @@ public class ChattingManager {
 	}
 
 	private void removeChatRoom(long internalIdx, int roomIdx) throws Exception {
-		ChattingRoomManager chatRoomManager = chattingRooms.get(roomIdx);
+		ChattingRoomData chatRoomManager = chattingRooms.get(roomIdx);
 		if (chatRoomManager == null) {
 			throw new ChatRoomNotExistException();
 		}
@@ -127,10 +122,10 @@ public class ChattingManager {
 	public ArrayList<ChattingRoom> getChatRoomList() {
 		ArrayList<ChattingRoom> roomList = new ArrayList<ChattingRoom>();
 		
-		for (Entry<Integer, ChattingRoomManager> roomEntry : chattingRooms.entrySet()) {
-			ChattingRoomManager room = roomEntry.getValue();
+		for (Entry<Integer, ChattingRoomData> roomEntry : chattingRooms.entrySet()) {
+			ChattingRoomData room = roomEntry.getValue();
 			if (room != null) {
-				roomList.add(room.getChattingRoomData());
+				roomList.add(room.getChattingRoom());
 			}
 		}
 		
@@ -138,9 +133,9 @@ public class ChattingManager {
 	}
 
 	public ChattingRoom getChatRoom(int roomIdx) {
-		ChattingRoomManager room = chattingRooms.get(roomIdx);
+		ChattingRoomData room = chattingRooms.get(roomIdx);
 		if (room != null) {
-			return room.getChattingRoomData();
+			return room.getChattingRoom();
 		}
 		return null;
 	}
@@ -153,11 +148,10 @@ public class ChattingManager {
 	 */
 	public ChattingUser createChattingUser(Users users) {
 		internalIndex++;
-
 		users.setInternalIdx(internalIndex);
 
 		//자주 사용 되는 객체 이기 때문에 약한 참조 처리
-		WeakReference<ChattingUser> userRef = new WeakReference<ChattingUser>(new ChattingUser(users));
+		WeakReference<ChattingUser> userRef = new WeakReference<>(new ChattingUser(users));
 		ChattingUser chattingUser = userRef.get();
 
 		//internalIndex 를 기준으로 채팅 유저를 제어해야 함
@@ -193,7 +187,7 @@ public class ChattingManager {
 
 	public int leaveChatRoom(long internalIdx, int roomIdx, Iterator<Entry<Long, ChattingUser>> userIteration) throws Exception {
 		if (roomIdx != -1) {
-			ChattingRoomManager chatRoomManager = chattingRooms.get(roomIdx);
+			ChattingRoomData chatRoomManager = chattingRooms.get(roomIdx);
 			if (chatRoomManager == null) {
 				throw new ChatRoomNotExistException();
 			}
@@ -226,7 +220,7 @@ public class ChattingManager {
 
 	public Long[] getBlackList(long internalIdx, int roomIdx) throws Exception {
 		//개별 채팅방 안에 유저가 담기도록 개선해야함
-		ChattingRoomManager chatRoomManager = chattingRooms.get(roomIdx);
+		ChattingRoomData chatRoomManager = chattingRooms.get(roomIdx);
 		if (chatRoomManager == null) {
 			return null;
 		}
@@ -238,7 +232,7 @@ public class ChattingManager {
 	
 	public void addBlackList(long internalIdx, int programIdx, long blackUser) throws Exception {
 		if (programIdx != -1) {
-			ChattingRoomManager chatRoomManager = chattingRooms.get(programIdx);
+			ChattingRoomData chatRoomManager = chattingRooms.get(programIdx);
 			if (chatRoomManager == null) {
 				throw new ChatRoomNotExistException();
 			}
@@ -253,7 +247,7 @@ public class ChattingManager {
 	
 	public void removeBlackList(long internalIdx, int programIdx, long blackUser) throws Exception {
 		if (programIdx != -1) {
-			ChattingRoomManager chatRoomManager = chattingRooms.get(programIdx);
+			ChattingRoomData chatRoomManager = chattingRooms.get(programIdx);
 			if (chatRoomManager == null) {
 				throw new ChatRoomNotExistException();
 			}
@@ -267,12 +261,12 @@ public class ChattingManager {
 	public ArrayList<Users> getUserList(int roomIdx) {
 		ArrayList<Users> userList = new ArrayList<Users>();
 		
-		ChattingRoomManager chattingRoomManager = chattingRooms.get(roomIdx);
-		if (chattingRoomManager == null) {
+		ChattingRoomData chattingRoomData = chattingRooms.get(roomIdx);
+		if (chattingRoomData == null) {
 			return null;
 		}
 
-		for (Entry<Long, Users> userEntry : chattingRoomManager.getUserList().entrySet()) {
+		for (Entry<Long, Users> userEntry : chattingRoomData.getUserList().entrySet()) {
 			userList.add(userEntry.getValue());
 		}
 
@@ -306,7 +300,7 @@ public class ChattingManager {
 
 */
 	private void sendEventToRoom(long internalIdx, MessageEvent messageEvent, boolean sendMyself) {
-		ChattingRoomManager room = chattingRooms.get(messageEvent.getProgramIdx());
+		ChattingRoomData room = chattingRooms.get(messageEvent.getProgramIdx());
 		if (room != null) {
 			for (Long keyIndex : room.getInternalUsers()) {
 				if (sendMyself == true || (sendMyself == false && internalIdx != keyIndex)) {
@@ -343,7 +337,7 @@ public class ChattingManager {
 	}
 
 	private void sendEventToPerson(int roomIdx, long userIdx, MessageEvent messageEvent) {
-		ChattingRoomManager room = chattingRooms.get(roomIdx);
+		ChattingRoomData room = chattingRooms.get(roomIdx);
 		if (room != null) {
 			for (Long keyIndex : room.getInternalUsers()) {
 				ChattingUser user = chattingUsers.get(keyIndex);
@@ -356,7 +350,7 @@ public class ChattingManager {
 
 	public void sendMessage(long internalIdx, MessageEvent messageEvent) throws Exception{
 
-		ChattingRoomManager room = chattingRooms.get(messageEvent.getProgramIdx());
+		ChattingRoomData room = chattingRooms.get(messageEvent.getProgramIdx());
 		if (room != null) { 
 			ChattingUser user;
 
@@ -442,6 +436,20 @@ public class ChattingManager {
 					}
 				}
 			}
+		}
+	}
+
+	private void setChattingUser(Users users) {
+		internalIndex++;
+		users.setInternalIdx(internalIndex);
+
+		Users chattingUser = new Users();
+		WeakReference<Users> userRef = new WeakReference<>(users);
+		chattingUser = userRef.get();
+
+		//internalIndex 를 기준으로 채팅 유저를 제어해야 함
+		synchronized (chattingUserLock) {
+			//chattingUsers.put(internalIndex, chattingUser);
 		}
 	}
 }

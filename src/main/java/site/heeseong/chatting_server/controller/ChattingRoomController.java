@@ -34,11 +34,7 @@ public class ChattingRoomController {
 		chattingRoom.setUserId(userId);
 		chattingRoom.setUserName(userName);
 		chattingRoom.setAdmin(isAdmin);
-		
-		//유저 데이터 셋팅
-		//이부분은 전부가 세션으로 처리 가능
-		Users users = new Users(chattingRoom.getUserIdx(), chattingRoom.getUserId(), chattingRoom.getUserName(), chattingRoom.isAdmin());
-		return chattingService.enterChattingRoom(chattingRoom, users);
+		return chattingService.enterChattingRoom(chattingRoom);
 	}
 
 	@RequestMapping(value="/users", method=RequestMethod.GET)
@@ -52,7 +48,6 @@ public class ChattingRoomController {
 			@RequestHeader("internalIdx") long internalIdx
 			, @RequestHeader("programIdx") int programIdx
 			, @RequestHeader("userIdx") int userIdx) throws Exception {
-		log.debug("leave chatRoom");
 		chattingService.leaveChatRoom(programIdx, userIdx, internalIdx);
 	}
 
@@ -69,7 +64,6 @@ public class ChattingRoomController {
 			@RequestHeader("programIdx") int programIdx,
 			@RequestHeader("userIdx") int userIdx,
 			@RequestBody Users blackUser) throws Exception {
-
 		chattingService.addBlackList(internalIdx, userIdx, programIdx, blackUser.getUserIdx());
 	}
 

@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class MessageEvent {
+
 	private int type;
 	private int programIdx;
 	private String userId;
@@ -30,10 +31,5 @@ public class MessageEvent {
 		this.name = name;
 		this.message = msg;
 		this.to_userId = to_userId;
-	}
-
-
-	public MessageEvent(int type, int idx, String userid, String username) {
-		this(type, -1, idx, -1, userid, username, "","");
 	}
 }

@@ -17,19 +17,16 @@ public class MessageEventController {
 		this.chattingService = chattingService;
 	}
 
-
 	@RequestMapping(value="/event", method=RequestMethod.GET)
 	public ArrayList<MessageEvent> getEvent(
 			@RequestHeader("internalIdx") int internalIdx) throws Exception {
-
 		return chattingService.getNewEvents(internalIdx);
 	}
 
 	@RequestMapping(value="/event", method=RequestMethod.POST)
 	public MessageEvent sendEvent(
 			@RequestHeader("internalIdx") int internalIdx,
-    		@RequestBody MessageEvent chatDTO) throws Exception {
-
-		return chattingService.sendEvent(internalIdx,chatDTO);
+    		@RequestBody MessageEvent messageEvent) throws Exception {
+		return chattingService.sendEvent(internalIdx, messageEvent);
 	}
 }

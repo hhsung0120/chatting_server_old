@@ -1,4 +1,4 @@
-package site.heeseong.chatting_server.manager;
+package site.heeseong.chatting_server.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -16,7 +16,7 @@ public class ChattingUser {
 	private int programIdx;
 	private ArrayBlockingQueue<MessageEvent> messageQueue;
 	private long latestMessageTime;
-	private long DEFAULT_MESSAGE_TIMEOUT = 60 * 1000 * 2;	 // 2 minutes
+	private long DEFAULT_MESSAGE_TIMEOUT = 60 * 1000 * 2; // 2 minutes
 	private long userTimeout = DEFAULT_MESSAGE_TIMEOUT;
 
 	public ChattingUser(Users userInfo) {
