@@ -18,8 +18,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class ChattingEventManager {
 
-	private ConcurrentHashMap<Integer, ChattingRoomData> chattingRooms = new ConcurrentHashMap<Integer, ChattingRoomData>();
-	private ConcurrentHashMap<Long, ChattingUser> chattingUsers = new ConcurrentHashMap<Long, ChattingUser>();
+	private ConcurrentHashMap<Integer, ChattingRoomData> chattingRooms = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<Long, ChattingUser> chattingUsers = new ConcurrentHashMap<>();
 	private Object chattingRoomLock = new Object();
 	private Object chattingUserLock = new Object();
 	private long internalIndex = 0;
@@ -34,7 +34,7 @@ public class ChattingEventManager {
 			throw new BadArgumentException();
 		}
 
-		//setChattingUser(users);
+		//Users chattingUser = setChattingUser(users);
 
 		ChattingUser chattingUser = createChattingUser(users);
 
@@ -53,7 +53,7 @@ public class ChattingEventManager {
 		chattingUser.setProgramIdx(chattingRoom.getProgramIdx());
 		if (notify) {
 			MessageEvent messageEvent = EventManager.makeEnterRoomEvent(chattingRoom.getProgramIdx(), users);
-			sendEvent(users.getInternalIdx(), messageEvent);
+			sendEvent(chattingUser.getInternalIdx(), messageEvent);
 			chattingMapper.insertEvent(messageEvent);
 		}
 
@@ -439,7 +439,7 @@ public class ChattingEventManager {
 		}
 	}
 
-	private void setChattingUser(Users users) {
+	private Users setChattingUser(Users users) {
 		internalIndex++;
 		users.setInternalIdx(internalIndex);
 
@@ -449,7 +449,9 @@ public class ChattingEventManager {
 
 		//internalIndex 를 기준으로 채팅 유저를 제어해야 함
 		synchronized (chattingUserLock) {
-			//chattingUsers.put(internalIndex, chattingUser);
+//			chattingUsers.put(internalIndex, chattingUser);
 		}
+
+		return chattingUser;
 	}
 }
