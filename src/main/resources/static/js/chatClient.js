@@ -64,7 +64,7 @@ var ChatClient = function() {
 		if (userInfo.programIdx !== -1) {
 			$.ajax({
 				method: "DELETE",
-				url: '/chattingRoom/user',
+				url: '/chattingRoom/users',
 				contentType:'application/json; charset=UTF-8',
 				async: async,
 				headers: userInfo
@@ -270,7 +270,6 @@ var ChatClient = function() {
 			}
 		});			
 	};
-	//[2016.10.17 한희성]블랙리스트를 받아오기 위해 function 추가
 	var getBlackList = function(blackUser, callback) {
 		$.ajax({
 			method: "GET",

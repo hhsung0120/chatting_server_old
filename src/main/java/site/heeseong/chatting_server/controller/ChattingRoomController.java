@@ -4,7 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import site.heeseong.chatting_server.model.ChattingRoom;
-import site.heeseong.chatting_server.model.Users;
+import site.heeseong.chatting_server.model.ChattingUsers;
 import site.heeseong.chatting_server.service.ChattingService;
 
 import java.util.ArrayList;
@@ -38,12 +38,12 @@ public class ChattingRoomController {
 	}
 
 	@RequestMapping(value="/users", method=RequestMethod.GET)
-	public ArrayList<Users> listUsers(
+	public ArrayList<ChattingUsers> listUsers(
 			@RequestParam("programIdx") int programIdx){
 		return chattingService.listUsers(programIdx);
 	}
 
-	@RequestMapping(value="/user", method=RequestMethod.DELETE)
+	@RequestMapping(value="/users", method=RequestMethod.DELETE)
 	public void leaveChatRoom(
 			@RequestHeader("internalIdx") long internalIdx
 			, @RequestHeader("programIdx") int programIdx
@@ -63,7 +63,7 @@ public class ChattingRoomController {
 			@RequestHeader("internalIdx") long internalIdx,
 			@RequestHeader("programIdx") int programIdx,
 			@RequestHeader("userIdx") int userIdx,
-			@RequestBody Users blackUser) throws Exception {
+			@RequestBody ChattingUsers blackUser) throws Exception {
 		chattingService.addBlackList(internalIdx, userIdx, programIdx, blackUser.getUserIdx());
 	}
 
@@ -72,7 +72,7 @@ public class ChattingRoomController {
 			@RequestHeader("internalIdx") long internalIdx,
 			@RequestHeader("programIdx") int programIdx,
 			@RequestHeader("userIdx") int userIdx,
-			@RequestBody Users blackUser) throws Exception {
+			@RequestBody ChattingUsers blackUser) throws Exception {
 		chattingService.removeBlackList(internalIdx, userIdx, programIdx, blackUser.getUserIdx());
 	}
 

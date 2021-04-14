@@ -4,7 +4,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ChattingRoom extends Users{
+public class ChattingRoom extends ChattingUsers {
 
 	private long internalIdx;
 	private int programIdx;

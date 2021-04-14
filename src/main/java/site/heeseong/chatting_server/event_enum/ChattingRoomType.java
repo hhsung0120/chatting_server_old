@@ -7,8 +7,8 @@ public enum ChattingRoomType {
     , APPROVAL(2, "APPROVAL")
     ;
 
-    private int value = 0;
-    private String textValue = "";
+    private int value;
+    private String textValue;
 
     ChattingRoomType(int value, String textValue){
         this.value = value;

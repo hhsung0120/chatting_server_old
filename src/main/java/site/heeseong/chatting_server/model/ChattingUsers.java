@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 @Data
 @NoArgsConstructor
-public class Users {
+public class ChattingUsers {
 
 	private long internalIdx;
 	private long userIdx;
@@ -19,7 +19,7 @@ public class Users {
 	private String userName;
 	private boolean isAdmin;
 
-	public Users(long userIdx, String userId, String userName, boolean isAdmin){
+	public ChattingUsers(long userIdx, String userId, String userName, boolean isAdmin){
 		this.userIdx = userIdx;
 		this.userId = userId;
 		this.userName = userName;

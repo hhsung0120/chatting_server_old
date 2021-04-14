@@ -10,37 +10,37 @@ import java.util.concurrent.TimeUnit;
 @Data
 public class ChattingUserData {
 
-	private Users users;
+	private ChattingUsers chattingUsers;
 	private int programIdx;
 	private ArrayBlockingQueue<MessageEvent> messageQueue;
 	private long latestMessageTime;
 	private long DEFAULT_MESSAGE_TIMEOUT = 60 * 1000 * 2; // 2 minutes
 	private long userTimeout = DEFAULT_MESSAGE_TIMEOUT;
 
-	public ChattingUserData(Users users) {
-		this.users = users;
+	public ChattingUserData(ChattingUsers chattingUsers) {
+		this.chattingUsers = chattingUsers;
 		messageQueue = new ArrayBlockingQueue<MessageEvent>(10);
 		latestMessageTime = System.currentTimeMillis();
 	}
 
 	public long getUserIdx() {
-		return users.getUserIdx();
+		return chattingUsers.getUserIdx();
 	}
 
 	public long getInternalIdx() {
-		return users.getInternalIdx();
+		return chattingUsers.getInternalIdx();
 	}
 
 	public String getUserId() {
-		return users.getUserId();
+		return chattingUsers.getUserId();
 	}
 
 	public String getUserName() {
-		return users.getUserName();
+		return chattingUsers.getUserName();
 	}
 
 	public boolean isAdmin() {
-		return users.isAdmin();
+		return chattingUsers.isAdmin();
 	}
 
 	public void postMessage(MessageEvent messageEvent) {

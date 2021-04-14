@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ChattingRoomData {
 
 	private ChattingRoom chattingRoom;
-	private ConcurrentHashMap<Long, Users> users;
+	private ConcurrentHashMap<Long, ChattingUsers> users;
 	private Object userLock = new Object();
 	private Object blackLock = new Object();
 	private HashSet<Long> blackList = new HashSet<Long>();
@@ -80,9 +80,9 @@ public class ChattingRoomData {
 	}
 	
 	@JsonIgnore
-	public ConcurrentHashMap<Long, Users> getUserList() {
+	public ConcurrentHashMap<Long, ChattingUsers> getUserList() {
 		if (users == null) {
-			users = new ConcurrentHashMap<Long, Users>();
+			users = new ConcurrentHashMap<Long, ChattingUsers>();
 		}
 		return users;
 	}
@@ -91,7 +91,7 @@ public class ChattingRoomData {
 		Set<Long> userIdxs = new HashSet<Long>();
 		
 		for (Long keyIndex : getInternalUsers()) {
-			Users user = users.get(keyIndex);
+			ChattingUsers user = users.get(keyIndex);
 			userIdxs.add(user.getUserIdx());
 		}
 		return userIdxs;
@@ -100,12 +100,12 @@ public class ChattingRoomData {
 	@JsonIgnore
 	public Set<Long> getInternalUsers() {
 		if (users == null) {
-			users = new ConcurrentHashMap<Long, Users>();
+			users = new ConcurrentHashMap<Long, ChattingUsers>();
 		}
 		return users.keySet();
 	}
 	
-	public int addUser(Users user) {
+	public int addUser(ChattingUsers user) {
 		if (getInternalUsers().contains(user.getInternalIdx()) == true) {
 			return -1;
 		}

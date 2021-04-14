@@ -1,10 +1,7 @@
-package site.heeseong.chatting_server.component;
+package site.heeseong.chatting_server.model;
 
 
 import site.heeseong.chatting_server.event_enum.MessageEventType;
-import site.heeseong.chatting_server.model.ChattingRoom;
-import site.heeseong.chatting_server.model.MessageEvent;
-import site.heeseong.chatting_server.model.Users;
 
 public class EventManager {
 	public static MessageEvent makeCreateRoomEvent(ChattingRoom chattingRoom) {
@@ -20,7 +17,7 @@ public class EventManager {
 		return messageEvent;
 	}
 
-	public static MessageEvent makeEnterRoomEvent(int roomIdx, Users chatroomUser) {
+	public static MessageEvent makeEnterRoomEvent(int roomIdx, ChattingUsers chatroomUser) {
 		MessageEvent messageEvent = new MessageEvent();
 		
 		messageEvent.setType(MessageEventType.ENTER_USER.getValue());

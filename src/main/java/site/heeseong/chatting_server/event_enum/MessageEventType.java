@@ -15,15 +15,15 @@ public enum MessageEventType {
     , REMOVE_CHATROOM(11, "REMOVE_CHATROOM")
     , ADD_BLACKLIST(12, "ADD_BLACKLIST")
     , REMOVE_BLACKLIST(13, "REMOVE_BLACKLIST")
-    , LIST_BLACKLIST(14, "REMOVE_BLACKLIST")
+    , LIST_BLACKLIST(14, "LIST_BLACKLIST")
     , UPDATE_CHATROOM(14, "UPDATE_CHATROOM")
 
     , ENTER_USER(20, "ENTER_USER")
     , LEAVE_USER(21, "LEAVE_USER")
     ;
 
-    private int value = 0;
-    private String textValue = "";
+    private int value;
+    private String textValue;
 
     MessageEventType(int value){
         this.value = value;
