@@ -64,9 +64,9 @@ public class ChattingRoomData {
 	}
 	
 	@JsonIgnore
-	public int getType() {
+	public int getChattingRoomType() {
 		if (chattingRoom != null) {
-			return chattingRoom.getType();
+			return chattingRoom.getRoomType();
 		}
 		return 0;
 	}

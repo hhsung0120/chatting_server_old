@@ -29,7 +29,6 @@ public class ChattingRoomController {
 			, @RequestHeader("isAdmin") boolean isAdmin
 			, @RequestBody ChattingRoom chattingRoom) throws Exception {
 
-		//chattingRoom 에 뭐 담겨 오는지 체크하고 나중에 세션으로 처리
 		chattingRoom.setUserIdx(userIdx);
 		chattingRoom.setUserId(userId);
 		chattingRoom.setUserName(userName);

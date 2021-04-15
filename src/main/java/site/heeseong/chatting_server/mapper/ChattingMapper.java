@@ -6,7 +6,8 @@ import site.heeseong.chatting_server.model.MessageEvent;
 
 @Mapper
 public interface ChattingMapper {
-	@Insert("insert into chatting(type, programIdx, from_userIdx, to_userIdx, userid, to_userId,  name, message,regiDate) values (#{type}, #{programIdx}, #{fromUserIdx}, #{to_userIdx}, #{userId}, #{to_userId}, #{name}, #{message},utc_timestamp())")
+	@Insert("insert into chatting(message_evenType, programIdx, to_userIdx, from_userIdx, message) " +
+			"values (#{messageEventType}, #{programIdx}, #{toUserIdx}, #{fromUserIdx}, #{message})")
 	@Options(useGeneratedKeys=true, keyProperty="idx")//고유값을 받기위해 id > idx 수정 16.10.17
 	public long insertEvent(MessageEvent chatDTO) throws Exception;
 

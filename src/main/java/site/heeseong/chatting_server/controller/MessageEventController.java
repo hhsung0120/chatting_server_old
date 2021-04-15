@@ -27,6 +27,7 @@ public class MessageEventController {
 	public MessageEvent sendEvent(
 			@RequestHeader("internalIdx") int internalIdx,
     		@RequestBody MessageEvent messageEvent) throws Exception {
+		System.out.println(messageEvent.toString());
 		return chattingService.sendEvent(internalIdx, messageEvent);
 	}
 }

@@ -161,26 +161,27 @@ var exitChatRoom = function(aync) {
 var processEvents = function(events) {
 	if (events && events.length > 0) {
 		events.forEach (function(event) {
-			switch(event.type) {
+			switch(event.messageEventType) {
 				case eventType.NORMAL_MSG:
 					//관리자 화면 admin 일때 자기 자신 아이콘 안보임 (웹적용)
-					if(event.fromUserIdx==userInfo.userMessageIdx && event.name == 'admin'){
-						$('#chat-messages').append('<li class="admin"><div class="clear"><p class="name fl">'+"Admin"/*event.name*/+'</p>'+
+					if(event.fromUserIdx==userInfo.userMessageIdx && event.userName == 'admin'){
+						$('#chat-messages').append('<li class="admin"><div class="clear"><p class="name fl">'+"Admin"/*event.userName*/+'</p>'+
 							'<div class="fr">'+
 							'</div></div><div class="cont"><span class="bg_top"></span><p class="txt">'+event.message+'</p>'+
 							'<span class="bg_bottom"></span></div></li>');
-					}else if(event.fromUserIdx!=userInfo.userMessageIdx && event.name == 'admin'){
-						$('#chat-messages').append('<li class="admin"><div class="clear"><p class="name fl">'+"Admin"/*event.name*/+'</p>'+
+					}else if(event.fromUserIdx!=userInfo.userMessageIdx && event.userName == 'admin'){
+						$('#chat-messages').append('<li class="admin"><div class="clear"><p class="name fl">'+"Admin"/*event.userName*/+'</p>'+
 							'<div class="fr"></div></div><div class="cont"><span class="bg_top"></span><p class="txt">'+event.message+'</p>'+
 							'<span class="bg_bottom"></span></div></li>');
-					}else if(event.fromUserIdx!=userInfo.userMessageIdx && event.name != 'admin'){
-						$('#chat-messages').append('<li class="me"><p class="name"><div class="clear">'+event.name
+					}else if(event.fromUserIdx!=userInfo.userMessageIdx && event.userName != 'admin'){
+						console.log(event);
+						$('#chat-messages').append('<li class="me"><p class="name"><div class="clear">'+event.userName
 							+'<div class="fr">'+
 							'</div></div></p><div class="cont"><span class="bg_top"></span><p class="txt">'+event.message+'</p><span class="bg_bottom"></span>'+
 							'</div></li>');
 					}
 					else{
-						$("#chat-messages").append('<li class="me"><p class="name">'+event.name+'</p><div class="cont">'
+						$("#chat-messages").append('<li class="me"><p class="name">'+event.userName+'</p><div class="cont">'
 							+'<span class="bg_top"></span><p class="txt">'+event.message+'</p><span class="bg_bottom"></span>'+
 							'</div></li>');
 					}
@@ -193,11 +194,11 @@ var processEvents = function(events) {
 					break;
 				case eventType.DIRECT_MSG:
 					console.log('DIRECT_MSG')
-					$('#chat-messages').append('<li class="list-group-item chat-message direct_message col-lg-12">' + event.userId + '(' + event.name + ') : ' + event.message + '</li>');
+					$('#chat-messages').append('<li class="list-group-item chat-message direct_message col-lg-12">' + event.userId + '(' + event.userName + ') : ' + event.message + '</li>');
 					break;
 				case eventType.ADMIN_MSG:
 					console.log('ADMIN_MSG')
-					$('#chat-messages').append('<li class="list-group-item chat-message admin_message col-lg-12">' + event.userId + '(' + event.name + ') : ' + event.message + '</li>');
+					$('#chat-messages').append('<li class="list-group-item chat-message admin_message col-lg-12">' + event.userId + '(' + event.userName + ') : ' + event.message + '</li>');
 					break;
 				case eventType.BLOCKED_MSG:
 					console.log('BLOCKED_MSG');
@@ -206,7 +207,7 @@ var processEvents = function(events) {
 				case eventType.CREATE_CHATROOM:
 //					var tr = $('<tr>', {
 //						id: "ROOM_" + event.programIdx
-//					}).append('<td>' + event.name + '</td><td>' + event.userId + '</td><td>' + event.message +'</td>');
+//					}).append('<td>' + event.userName + '</td><td>' + event.userId + '</td><td>' + event.message +'</td>');
 //					tr.click(function() {
 //						ChatClient.enterChatRoom(room.programIdx, '', '', '', 0, function(data) {
 //							drawEnterChatRoom(event.programIdx, data.name, data.userIdx);
@@ -220,7 +221,7 @@ var processEvents = function(events) {
 					console.log('REMOVE_CHATROOM')
 					break;
 				case eventType.ENTER_USER:
-					addUserToUserList(event.fromUserIdx, event.userId, event.name);
+					addUserToUserList(event.fromUserIdx, event.userId, event.userName);
 					console.log('ENTER_USER')
 					break;
 				case eventType.LEAVE_USER:
@@ -232,7 +233,7 @@ var processEvents = function(events) {
 					console.log('REQ_APPROVAL_MSG');
 					var req_approval_msg = $('<li>', {
 						'class':'list-group-item approve_message col-lg-12'
-					}).html('<div class="col-lg-12">' + event.userId + '(' + event.name + ') : ' + event.message + '</div>')
+					}).html('<div class="col-lg-12">' + event.userId + '(' + event.userName + ') : ' + event.message + '</div>')
 					var approve_button = $('<button>', {
 						'type':'button',
 						'class': 'btn btn-default col-lg-6',
@@ -245,10 +246,10 @@ var processEvents = function(events) {
 					req_approval_msg.append(reject_button);
 
 					approve_button.click(function() {
-						ChatClient.approveMessage(event.fromUserIdx, event.userId, event.name, event.message);
+						ChatClient.approveMessage(event.fromUserIdx, event.userId, event.userName, event.message);
 					});
 					reject_button.click(function() {
-						ChatClient.rejectMessage(event.fromUserIdx, event.userId, event.name, event.message);
+						ChatClient.rejectMessage(event.fromUserIdx, event.userId, event.userName, event.message);
 					});
 
 					$('#chat-messages').append(req_approval_msg);

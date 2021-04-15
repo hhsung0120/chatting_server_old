@@ -11,7 +11,7 @@ public class ChattingRoom extends ChattingUsers {
 	private String name;
 	private String description;
 	private String password;
-	private int type; //
+	private int roomType; //
 	private long adminIdx;
 	private String status;
 
@@ -19,7 +19,6 @@ public class ChattingRoom extends ChattingUsers {
 	//roomName;
 	//roomDescription
 	//roomPassword;
-	//roomType;
 	//roomAdminIdx;
 	//roomStatus;
 	//userIdx;
@@ -29,7 +28,7 @@ public class ChattingRoom extends ChattingUsers {
 		this.description = description;
 		this.password = password;
 		this.status = status;
-		this.type = type;
+		this.roomType = type;
 		this.adminIdx = adminIdx;
 		this.programIdx = programIdx;
 		this.setUserIdx(userIdx);

@@ -29,7 +29,7 @@ var ChatClient = function() {
 				adminIdx: adminIdx,
 				name: name,
 				description: description,
-				type: type,
+				roomType: type,
 			};
 
 			$.ajax({
@@ -142,6 +142,7 @@ var ChatClient = function() {
 				cache: false,
 				headers: userInfo
 			}).done(function(data){
+				console.log(data)
 				if (callback) {
 					callback(data);
 				}
@@ -161,10 +162,11 @@ var ChatClient = function() {
 			programIdx : userInfo.programIdx
 			, fromUserIdx : userInfo.userIdx
 			, userId : userInfo.userId
-			, name : userInfo.userName
+			, userName : userInfo.userName
 			, message : message
-			, type : eventType.NORMAL_MSG
+			, messageEventType : eventType.NORMAL_MSG
 		};
+		console.log(sendData);
 		$.ajax({
 			method: "POST",
 			url: '/message/event',
@@ -192,7 +194,7 @@ var ChatClient = function() {
 				userId: userInfo.userId,
 				name: userInfo.userName,
 				message: message,
-				type: eventType.ADMIN_MSG
+				messageEventType: eventType.ADMIN_MSG
 			};
 		
 			$.ajax({
@@ -218,7 +220,7 @@ var ChatClient = function() {
 			toUserIdx : toUserIdx,
 			to_UserId : toUserId,
 			message: message,
-			type: eventType.DIRECT_MSG
+			messageEventType: eventType.DIRECT_MSG
 		};
 		$.ajax({
 			method: "POST",
@@ -238,7 +240,8 @@ var ChatClient = function() {
 			programIdx: userInfo.programIdx,
 			userIdx : blackUser,
 		};
-	
+		console.log(sendData)
+		console.log(userInfo)
 		$.ajax({
 			method: "POST",
 			url: '/chattingRoom/blacklist',
@@ -257,7 +260,8 @@ var ChatClient = function() {
 			programIdx: userInfo.programIdx,
 			userIdx : blackUser,
 		};
-		
+		console.log(sendData)
+		console.log(userInfo)
 		$.ajax({
 			method: "DELETE",
 			url: '/chattingRoom/blacklist',
@@ -290,8 +294,9 @@ var ChatClient = function() {
 			userId: orgUserId,
 			name: orgUserName,
 			message: message,
-			type: eventType.APPROVED_MSG
+			messageEventType: eventType.APPROVED_MSG
 		};
+		console.log(sendData);
 		$.ajax({
 			method: "POST",
 			url: '/message/event',
@@ -312,7 +317,7 @@ var ChatClient = function() {
 			userId: orgUserId,
 			name: orgUserName,
 			message: message,
-			type: eventType.REJECTED_MSG
+			messageEventType: eventType.REJECTED_MSG
 		};
 		
 		$.ajax({
