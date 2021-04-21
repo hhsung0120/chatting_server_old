@@ -111,6 +111,7 @@ public class ChattingService {
 	public MessageEvent sendEvent(long internalIdx, MessageEvent messageEvent) throws Exception{
 		chattingMapper.insertEvent(messageEvent);
 		messageEvent.setIdx(messageEvent.getIdx());
+
 		this.sendMessageEvent(internalIdx, messageEvent);
 
 		return messageEvent;
@@ -173,50 +174,47 @@ public class ChattingService {
 				sendMessageEvent(internalIdx, messageEvent);
 				chattingMapper.insertEvent(messageEvent);
 			}
-		}
-		else {
+		}else {
 			throw new BadArgumentException();
 		}
-
-
 
 		return 0;
 	}
 
 	public Long[] getBlackList(long internalIdx, int roomIdx) throws Exception {
-		//개별 채팅방 안에 유저가 담기도록 개선해야함
+		checkAdmin(internalIdx);
+
 		ChattingRoomData chatRoomManager = chattingRooms.get(roomIdx);
 		if (chatRoomManager == null) {
 			return null;
 		}
 
-		checkAdmin(internalIdx);
-
 		return chatRoomManager.getBlackListArray();
 	}
 
 	private void addBlackList(long internalIdx, int programIdx, long blackUser) throws Exception {
+		checkAdmin(internalIdx);
+
 		if (programIdx != -1) {
 			ChattingRoomData chatRoomManager = chattingRooms.get(programIdx);
 			if (chatRoomManager == null) {
 				throw new ChatRoomNotExistException();
 			}
-
-			checkAdmin(internalIdx);
 			chatRoomManager.addBlackList(blackUser);
-		}
-		else {
+		}else {
 			throw new BadArgumentException();
 		}
 	}
 
 	private void removeBlackList(long internalIdx, int programIdx, long blackUser) throws Exception {
+		checkAdmin(internalIdx);
+
 		if (programIdx != -1) {
 			ChattingRoomData chatRoomManager = chattingRooms.get(programIdx);
 			if (chatRoomManager == null) {
 				throw new ChatRoomNotExistException();
 			}
-			checkAdmin(internalIdx);
+
 			chatRoomManager.removeBlackList(blackUser);
 		}
 	}
@@ -272,6 +270,7 @@ public class ChattingService {
 		synchronized (chattingUserLock) {
 			this.chattingUsers.put(internalIndex, chattingUserData);
 		}
+
 		return chattingUserData;
 	}
 
@@ -292,6 +291,7 @@ public class ChattingService {
 			}
 			user = null;
 		}
+
 		return 0;
 	}
 
@@ -319,12 +319,9 @@ public class ChattingService {
 				this.sendEvent(internalIdx, messageEvent);
 				chattingMapper.insertEvent(messageEvent);
 			}
-		}
-		else {
+		}else {
 			throw new BadArgumentException();
 		}
-
-
 
 		return 0;
 	}
@@ -409,7 +406,7 @@ public class ChattingService {
 		ChattingUserData user = chattingUsers.get(internalIdx);
 		if (user != null) {
 			try {
-				//메시지 보내는 구간
+				//메시지 담는 구간
 				user.postMessage(messageEvent);
 			} catch (Exception e) {
 				if (user.checkTimeout()) {
@@ -440,6 +437,7 @@ public class ChattingService {
 
 			if(room.getChattingRoomType() == ChattingRoomType.MANY_TO_MANY.getValue()){
 				sendEventToRoom(internalIdx, messageEvent);
+
 			}else if(room.getChattingRoomType() == ChattingRoomType.ONE_TO_MANY.getValue()){
 				user = chattingUsers.get(internalIdx);
 				if (user != null && user.isAdmin()) {
@@ -448,6 +446,7 @@ public class ChattingService {
 					sendEventToPerson(room.getProgramIdx(), room.getAdminIdx(), messageEvent);
 					sendEventToPerson(room.getProgramIdx(), messageEvent.getFromUserIdx(), messageEvent);
 				}
+
 			}else if(room.getChattingRoomType() == ChattingRoomType.APPROVAL.getValue()){
 				user = chattingUsers.get(internalIdx);
 				if (user != null && user.isAdmin()) {
@@ -483,5 +482,4 @@ public class ChattingService {
 			}
 		}
 	}
-
 }

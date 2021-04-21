@@ -19,7 +19,7 @@ public class ChattingUserData {
 
 	public ChattingUserData(ChattingUsers chattingUsers) {
 		this.chattingUsers = chattingUsers;
-		messageQueue = new ArrayBlockingQueue<MessageEvent>(10);
+		messageQueue = new ArrayBlockingQueue<>(10);
 		latestMessageTime = System.currentTimeMillis();
 	}
 
@@ -77,7 +77,7 @@ public class ChattingUserData {
 	@JsonIgnore
 	public ArrayList<MessageEvent> getEvents() {
 		setLatestTime();
-		ArrayList<MessageEvent> messageEvents = new ArrayList<MessageEvent>();
+		ArrayList<MessageEvent> messageEvents = new ArrayList<>();
 		if (messageQueue != null) {
 			try {
 				MessageEvent messageEvent = messageQueue.poll(5000, TimeUnit.MILLISECONDS);
